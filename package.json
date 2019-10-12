@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/CollabCodeTech/collabcodetraining-api-auth/issues"
   },
-  "homepage": "https://github.com/CollabCodeTech/collabcodetraining-api-auth#readme"
+  "homepage": "https://github.com/CollabCodeTech/collabcodetraining-api-auth#readme",
+  "dependencies": {
+    "restify": "^8.4.0"
+  }
 }
