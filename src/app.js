@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import restify from 'restify';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
@@ -9,6 +10,11 @@ dotenv.config();
 
 const app = restify.createServer();
 const { PORT } = process.env;
+
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
 app.use(helmet());
 app.use(morgan('combined', { stream: winston.stream }));
