@@ -2,11 +2,11 @@
   "name": "api-auth",
   "version": "0.0.1",
   "description": "API Auth CollabCodeTraining",
-  "main": "app.js",
+  "main": "index.js",
   "scripts": {
-    "dev": "nodemon src/app.js",
+    "dev": "nodemon src/index.js",
     "build": "sucrase ./src -d ./dist --transforms imports",
-    "test": "mocha"
+    "test": "mocha --require sucrase/register ./test/**/*.js"
   },
   "repository": {
     "type": "git",
@@ -23,11 +23,12 @@
     "dotenv": "^8.1.0",
     "helmet": "^3.21.1",
     "jose": "^1.10.1",
+    "mongoose": "^5.7.5",
     "morgan": "^1.9.1",
     "restify": "^8.4.0",
     "restify-jwt-community": "^1.1.0",
-    "winston": "^3.2.1",
-    "mongoose": "^5.7.5"
+    "saslprep": "^1.0.3",
+    "winston": "^3.2.1"
   },
   "devDependencies": {
     "chai": "^4.2.0",
