@@ -1,4 +1,5 @@
 import restify from 'restify';
+import helmet from 'helmet';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
 import winston from 'winston';
@@ -9,7 +10,9 @@ dotenv.config();
 const app = restify.createServer();
 const { PORT } = process.env;
 
+app.use(helmet());
 app.use(morgan('combined', { stream: winston.stream }));
+
 app.get('/', (req, res) => res.send({ hello: 'world' }));
 
 app.listen(PORT, () => {

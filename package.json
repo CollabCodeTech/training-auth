@@ -20,8 +20,11 @@
   "dependencies": {
     "app-root-path": "^2.2.1",
     "dotenv": "^8.1.0",
+    "helmet": "^3.21.1",
+    "jose": "^1.10.1",
     "morgan": "^1.9.1",
     "restify": "^8.4.0",
+    "restify-jwt-community": "^1.1.0",
     "winston": "^3.2.1"
   },
   "devDependencies": {
