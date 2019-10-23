@@ -33,7 +33,7 @@ describe(`${prefix}/users`, () => {
       expect(res.body).to.have.property('_id');
       expect(res.body).to.have.property('name', newUser.name);
       expect(res.body).to.have.property('email', newUser.email);
-      expect(res.body).to.have.property('password', newUser.password);
+      expect(res.body).to.not.have.property('password');
     });
   });
 });

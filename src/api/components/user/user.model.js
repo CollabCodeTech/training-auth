@@ -1,6 +1,7 @@
+import bcrypt from 'bcrypt';
 import { Schema, model } from 'mongoose';
 
-const schemaUser = new Schema({
+const UserSchema = new Schema({
   name: {
     type: String,
     required: true,
@@ -18,7 +19,21 @@ const schemaUser = new Schema({
     type: String,
     required: true,
     minlength: 8,
+    select: false,
   },
 });
 
-export default model('User', schemaUser);
+async function bcryptPassword(next) {
+  try {
+    const hash = await bcrypt.hash(this.password, 10);
+    this.password = hash;
+
+    next();
+  } catch (error) {
+    next(error);
+  }
+}
+
+UserSchema.pre('save', bcryptPassword);
+
+export default model('User', UserSchema);

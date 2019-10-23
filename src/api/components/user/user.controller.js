@@ -14,6 +14,8 @@ const save = async ({ body }, res) => {
   try {
     const user = await User.create(body);
 
+    user.password = undefined;
+
     return res.send(201, user);
   } catch (error) {
     return res.send(500, error);
