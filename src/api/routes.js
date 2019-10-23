@@ -1,4 +1,4 @@
-import user from './components/user/route';
+import user from './components/user/user.route';
 
 export default (server) => {
   const prefix = '/api';

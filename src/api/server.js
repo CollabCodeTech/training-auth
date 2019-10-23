@@ -1,24 +1,18 @@
-import { config } from 'dotenv';
-import mongoose from 'mongoose';
 import restify from 'restify';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import winston from 'winston';
 
+import database from '../config/database';
 import routes from './routes';
 
-config();
-
 const server = restify.createServer();
-const { MONGO_URI } = process.env;
 
-mongoose.connect(MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+database();
 
 server.use(helmet());
 server.use(morgan('combined', { stream: winston.stream.write }));
+server.use(restify.plugins.bodyParser());
 
 routes(server);
 
