@@ -27,6 +27,7 @@
     "mongoose": "^5.7.5",
     "morgan": "^1.9.1",
     "restify": "^8.4.0",
+    "restify-cors-middleware": "^1.1.1",
     "restify-jwt-community": "^1.1.0",
     "saslprep": "^1.0.3",
     "winston": "^3.2.1"
