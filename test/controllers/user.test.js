@@ -1,12 +1,14 @@
 import request from 'supertest';
 import { expect } from 'chai';
 
+import User from '../../src/api/components/user/user.model';
 import server from '../../src/api/server';
 
 const prefix = '/api';
 
 describe(`${prefix}/users`, () => {
-  // after(() => User.deleteMany());
+  before(() => User.deleteMany());
+  after(() => User.deleteMany());
 
   describe('GET /', () => {
     it('should return all users', async () => {
