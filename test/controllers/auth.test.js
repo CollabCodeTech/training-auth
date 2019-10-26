@@ -12,9 +12,23 @@ describe(`${prefix}/auth`, () => {
 
   describe('POST /', () => {
     it('should return status 200', async () => {
-      const res = await request(server).post(`${prefix}/auth/login`);
+      const { status } = await request(server).post(`${prefix}/auth/login`);
 
-      expect(res.status).to.equal(200);
+      expect(status).to.equal(200);
+    });
+
+    it('should return a token', async () => {
+      const newUser = {
+        name: 'Marco Antonio Bruno da Silva',
+        email: 'marco.bruno.br@gmail.com',
+        password: 'q1w2e3r4',
+      };
+
+      await User.create(newUser);
+
+      const { body } = await request(server).post(`${prefix}/auth/login`);
+
+      expect(body).to.have.property('token');
     });
   });
 });
