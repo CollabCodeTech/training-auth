@@ -1,6 +1,6 @@
 const validation = (req, res, next) => {
   if (!req.body) {
-    return res.send(400, { error: 'User not found' });
+    return res.send(400, { error: 'Usuário não foi informado' });
   }
 
   return next();
