@@ -4,7 +4,7 @@ import { expect } from 'chai';
 import server from '../../src/api/server';
 import User from '../../src/api/components/user/user.model';
 
-const prefix = '/api';
+const path = '/api/auth/login';
 
 const newUser = {
   name: 'Marco Antonio Bruno da Silva',
@@ -12,7 +12,7 @@ const newUser = {
   password: 'q1w2e3r4',
 };
 
-describe(`${prefix}/auth/login`, () => {
+describe(path, () => {
   before(async () => {
     await User.deleteMany();
 
@@ -24,15 +24,16 @@ describe(`${prefix}/auth/login`, () => {
   });
 
   describe('POST /', () => {
-    it('should return status 400 without user', async () => {
-      const { status } = await request(server).post(`${prefix}/auth/login`);
+    it('should return status 400 and JSON error without user', async () => {
+      const { status, body } = await request(server).post(path);
 
       expect(status).to.equal(400);
+      expect(body).to.have.property('error');
     });
 
     it('should return status 200 with valid user and login', async () => {
       const { status } = await request(server)
-        .post(`${prefix}/auth/login`)
+        .post(path)
         .send({
           email: newUser.email,
           password: newUser.password,
@@ -43,7 +44,7 @@ describe(`${prefix}/auth/login`, () => {
 
     it('should return a token', async () => {
       const { body } = await request(server)
-        .post(`${prefix}/auth/login`)
+        .post(path)
         .send({
           email: newUser.email,
           password: newUser.password,
