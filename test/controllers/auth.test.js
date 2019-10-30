@@ -25,12 +25,7 @@ describe(`${prefix}/auth/login`, () => {
 
   describe('POST /', () => {
     it('should return status 400 without user', async () => {
-      const { status } = await request(server)
-        .post(`${prefix}/auth/login`)
-        .send({
-          email: 'henri@gmail.com',
-          password: 'w2e3r4t5',
-        });
+      const { status } = await request(server).post(`${prefix}/auth/login`);
 
       expect(status).to.equal(400);
     });
