@@ -24,7 +24,7 @@ describe(path, () => {
   });
 
   describe('POST /', () => {
-    it('should return status 400 and JSON error without user', async () => {
+    it('should return status 400 and JSON error without email and password', async () => {
       const { status, body } = await request(server).post(path);
 
       expect(status).to.equal(400);
