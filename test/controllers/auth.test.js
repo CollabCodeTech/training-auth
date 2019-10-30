@@ -31,6 +31,17 @@ describe(path, () => {
       expect(body).to.have.property('error');
     });
 
+    it('should return status 401 when the not equal password', async () => {
+      const { status } = await request(server)
+        .post(path)
+        .send({
+          email: newUser.email,
+          password: 'asada898ad98',
+        });
+
+      expect(status).to.equal(401);
+    });
+
     it('should return status 200 with valid user and login', async () => {
       const { status } = await request(server)
         .post(path)

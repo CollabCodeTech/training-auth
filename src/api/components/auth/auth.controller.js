@@ -7,7 +7,7 @@ const login = async ({ body: { email, password } }, res) => {
     const user = await User.findOne({ email }).select('+password');
     const match = await bcrypt.compare(password, user.password);
 
-    if (!match) return res.send(404, { error: '' });
+    if (!match) return res.send(401, { error: 'Senha inválida' });
 
     return res.send(200, { token: 'ok' });
   } catch (error) {
