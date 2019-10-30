@@ -1,3 +1,5 @@
+import { login } from './auth.controller';
+
 export default (server, prefix) => {
-  server.post(`${prefix}/auth/login`, (req, res) => res.send({ token: 'ok' }));
+  server.post(`${prefix}/auth/login`, login);
 };
