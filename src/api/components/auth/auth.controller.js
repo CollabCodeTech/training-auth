@@ -1,10 +1,8 @@
 import bcrypt from 'bcrypt';
 
-import User from '../user/user.model';
-
-const login = async ({ body: { email, password } }, res) => {
+const login = async ({ body: { password } }, res) => {
   try {
-    const user = await User.findOne({ email }).select('+password');
+    const { user } = res.locals;
     const match = await bcrypt.compare(password, user.password);
 
     if (!match) return res.send(401, { error: 'Senha inválida' });

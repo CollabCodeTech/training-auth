@@ -31,6 +31,14 @@ describe(path, () => {
       expect(body).to.have.property('error');
     });
 
+    it('should return status 401 when the not exist email', async () => {
+      const { status } = await request(server)
+        .post(path)
+        .send({ email: 'marco@gmail.com', password: 'ah98sh98sa89s' });
+
+      expect(status).to.equal(401);
+    });
+
     it('should return status 401 and JSON error when the not equal password', async () => {
       const { status, body } = await request(server)
         .post(path)
