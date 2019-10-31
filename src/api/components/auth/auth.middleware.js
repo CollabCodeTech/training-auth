@@ -13,7 +13,7 @@ const loadUser = async (req, res, next) => {
   const user = await User.findOne({ email }).select('+password');
 
   if (!user) {
-    return res.send(401, { error: 'Email não cadastro' });
+    return res.send(401, { error: 'Email não cadastrado' });
   }
 
   res.locals = { user };
