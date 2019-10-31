@@ -12,6 +12,8 @@ const newUser = {
   password: 'q1w2e3r4',
 };
 
+after(() => User.db.close());
+
 describe(path, () => {
   before(async () => {
     await User.deleteMany();
