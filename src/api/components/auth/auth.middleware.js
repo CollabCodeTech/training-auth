@@ -1,10 +1,14 @@
 import User from '../user/user.model';
 
-const validation = async (req, res, next) => {
+const hasBody = (req, res, next) => {
   if (!req.body) {
     return res.send(400, { error: 'Usuário não foi informado' });
   }
 
+  return next();
+};
+
+const loadUser = async (req, res, next) => {
   const { email } = req.body;
   const user = await User.findOne({ email }).select('+password');
 
@@ -16,5 +20,4 @@ const validation = async (req, res, next) => {
   return next();
 };
 
-// eslint-disable-next-line import/prefer-default-export
-export { validation };
+export { hasBody, loadUser };
