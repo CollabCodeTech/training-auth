@@ -6,11 +6,21 @@ const data = { name: 'Marco Bruno', email: 'marco.bruno.br@gmail.com' };
 
 describe('Jwt', () => {
   describe('#encode()', () => {
-    it('should encode the data', () => {
-      const token = Jwt.encode(data);
+    let token;
 
+    before(() => {
+      token = Jwt.encode(data, { expiresIn: '1day' });
+    });
+
+    it('should encode the data', () => {
       expect(token).to.be.a('string');
       expect(token).to.match(/^([^.]+\.){2}[^.]+$/);
+    });
+
+    it('should set expire time', () => {
+      const dataDecode = Jwt.decode(token);
+
+      expect(dataDecode).to.have.property('exp');
     });
   });
 
