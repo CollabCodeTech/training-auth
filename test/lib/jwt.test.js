@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { expect } from 'chai';
 
 import Jwt from '../../src/lib/Jwt.lib';
@@ -39,6 +40,17 @@ describe('Jwt', () => {
       expect(dataDecode).to.have.property('name');
       expect(dataDecode).to.have.property('email');
       expect(dataDecode).to.deep.equals(data);
+    });
+
+    it('should reject token has expired', () => {
+      data.iat = moment
+        .utc()
+        .subtract(20, 'days')
+        .unix();
+
+      token = Jwt.encode(data, { expiresIn: '1day' });
+
+      expect(() => Jwt.decode(token)).to.throw();
     });
   });
 });
