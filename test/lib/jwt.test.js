@@ -42,7 +42,7 @@ describe('Jwt', () => {
       expect(dataDecode).to.deep.equals(data);
     });
 
-    it('should reject token has expired', () => {
+    it('should reject expired token', () => {
       data.iat = moment
         .utc()
         .subtract(20, 'days')
