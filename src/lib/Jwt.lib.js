@@ -4,8 +4,9 @@ import jwt from 'jsonwebtoken';
 
 config();
 
-const { ALGORITHM, AUTH_PRIVATE_KEY_PATH } = process.env;
+const { ALGORITHM, AUTH_PRIVATE_KEY_PATH, AUTH_PUBLIC_KEY_PATH } = process.env;
 const filePrivateKey = readFileSync(AUTH_PRIVATE_KEY_PATH);
+const filePublicKey = readFileSync(AUTH_PUBLIC_KEY_PATH);
 
 const sign = (data, jwtOptions = {}) => {
   const token = jwt.sign(data, filePrivateKey, {
@@ -22,5 +23,10 @@ const encode = (data, options = {}) => {
   return token;
 };
 
-// eslint-disable-next-line import/prefer-default-export
-export default { encode };
+const decode = (token) => {
+  const data = jwt.verify(token, filePublicKey, { algorithms: [ALGORITHM] });
+
+  return data;
+};
+
+export default { encode, decode };
