@@ -74,6 +74,7 @@ describe(path, () => {
         });
 
       expect(body).to.have.property('token');
+      expect(body.token).to.match(/^([^.]+\.){2}[^.]+$/);
     });
   });
 });
