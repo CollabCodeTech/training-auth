@@ -10,6 +10,7 @@ describe('Jwt', () => {
       const token = Jwt.encode(data);
 
       expect(token).to.be.a('string');
+      expect(token).to.match(/^([^.]+\.){2}[^.]+$/);
     });
   });
 });
