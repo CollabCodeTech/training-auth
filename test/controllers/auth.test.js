@@ -73,8 +73,23 @@ describe(path, () => {
           password: newUser.password,
         });
 
-      expect(body).to.have.property('token');
-      expect(body.token).to.match(/^([^.]+\.){2}[^.]+$/);
+      expect(body).to.have.property('jwt');
+      expect(body.jwt).to.match(/^([^.]+\.){2}[^.]+$/);
+    });
+
+    it('should have Set-Cookie with SameSite=Strict; Secure; HttpOnly and token', async () => {
+      const { headers } = await request(server)
+        .post(path)
+        .send({
+          email: newUser.email,
+          password: newUser.password,
+        });
+
+      expect(headers).to.have.property('set-cookie');
+      expect(headers['set-cookie'][0]).to.be.a('string');
+      expect(headers['set-cookie'][0]).to.match(/SameSite=Strict/);
+      expect(headers['set-cookie'][0]).to.match(/Secure/);
+      expect(headers['set-cookie'][0]).to.match(/HttpOnly/);
     });
   });
 });
