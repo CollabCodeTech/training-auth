@@ -1,5 +1,11 @@
 import bcrypt from 'bcrypt';
 
+import Jwt from '../../../lib/Jwt.lib';
+
+const setCookieJwt = (res, jwt) => {
+  res.header('Set-Cookie', `jwt=${jwt}; SameSite=Strict; Secure; HttpOnly`);
+};
+
 const login = async ({ body: { password } }, res) => {
   try {
     const { user } = res.locals;
@@ -7,10 +13,11 @@ const login = async ({ body: { password } }, res) => {
 
     if (!match) return res.send(401, { error: 'Senha inválida' });
 
-    return res.send(200, {
-      token:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
-    });
+    const jwt = Jwt.encode({ name: user.name });
+
+    setCookieJwt(res, jwt);
+
+    return res.send(200, { jwt });
   } catch (error) {
     return res.send(500, error);
   }
