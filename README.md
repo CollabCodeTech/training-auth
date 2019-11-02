@@ -14,6 +14,7 @@ An Open Source online course platform.
 
 ```bash
 npm install
+cp example.env .env
 npm run dev
 ```
 
@@ -27,6 +28,17 @@ npm run dev
 ## Running the tests
 
 TBC
+
+## Running MongoDB with docker
+
+#### Prerequisites
+- Docker (>=1.13.1)
+
+
+Run the following command on the project root directory:
+```bash
+docker-compose up -d
+```
 
 ## Built With
 
