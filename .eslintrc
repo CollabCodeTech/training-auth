@@ -4,7 +4,7 @@
     "node": true,
     "mocha": true
   },
-  "extends": ["airbnb-base", "prettier"],
+  "extends": ["plugin:prettier/recommended", "airbnb-base"],
   "plugins": ["prettier"],
   "globals": {
     "Atomics": "readonly",
