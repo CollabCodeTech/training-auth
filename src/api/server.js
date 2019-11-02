@@ -26,7 +26,13 @@ server.pre(cors.preflight);
 
 server.use(cors.actual);
 server.use(helmet());
-server.use(morgan('combined', { stream: winston.stream.write }));
+server.use(
+  morgan('combined', {
+    stream: winston.stream.write,
+    // Skip request logging when running the tests
+    skip: () => process.env.NODE_ENV === 'test',
+  })
+);
 server.use(restify.plugins.bodyParser());
 
 routes(server);
