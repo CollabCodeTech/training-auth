@@ -17,7 +17,10 @@ const login = async ({ body: { password } }, res) => {
 
     setCookieJwt(res, jwt);
 
-    return res.send(200, { jwt });
+    return res.send(200, {
+      msg: 'Login efeturado com sucesso!',
+      name: user.name,
+    });
   } catch (error) {
     return res.send(500, error);
   }

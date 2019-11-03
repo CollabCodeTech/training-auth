@@ -65,16 +65,13 @@ describe(path, () => {
       expect(status).to.equal(200);
     });
 
-    it('should return a token', async () => {
+    it('should return json with msg and name', async () => {
       const { body } = await request(server)
         .post(path)
-        .send({
-          email: newUser.email,
-          password: newUser.password,
-        });
+        .send({ email: newUser.email, password: newUser.password });
 
-      expect(body).to.have.property('jwt');
-      expect(body.jwt).to.match(/^([^.]+\.){2}[^.]+$/);
+      expect(body).to.have.property('msg');
+      expect(body).to.have.property('name');
     });
 
     it('should have Set-Cookie with SameSite=Strict; Secure; HttpOnly and token', async () => {
