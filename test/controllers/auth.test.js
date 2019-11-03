@@ -65,7 +65,7 @@ describe(path, () => {
       expect(status).to.equal(200);
     });
 
-    it('should have Set-Cookie header', async () => {
+    it('should have Set-Cookie and JWT', async () => {
       const { headers } = await request(server)
         .post(path)
         .send({
@@ -76,9 +76,10 @@ describe(path, () => {
       expect(headers).to.have.property('set-cookie');
       expect(headers['set-cookie']).to.be.a('array');
       expect(headers['set-cookie'][0]).to.be.a('string');
+      expect(headers['set-cookie'][0]).to.match(/jwt=([^.]+\.){2}[^.]+;/);
     });
 
-    it('should Set-Cookie have jwt; SameSite=Strict; Secure; HttpOnly attribs', async () => {
+    it('should Set-Cookie have SameSite=Strict; Secure; HttpOnly attribs', async () => {
       const { headers } = await request(server)
         .post(path)
         .send({
@@ -87,7 +88,6 @@ describe(path, () => {
         });
 
       const cookie = headers['set-cookie'][0];
-      expect(cookie).to.match(/jwt=([^.]+\.){2}[^.]+;/);
       expect(cookie).to.match(/SameSite=Strict/);
       expect(cookie).to.match(/Secure/);
       expect(cookie).to.match(/HttpOnly/);
