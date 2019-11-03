@@ -51,7 +51,7 @@ describe(path, () => {
         });
 
       expect(status).to.equal(401);
-      expect(body).to.have.property('error');
+      expect(body).to.have.property('message');
     });
 
     it('should return status 200 with valid user and login', async () => {

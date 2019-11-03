@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt';
+import { UnauthorizedError, InternalServerError } from 'restify-errors';
 
 import Jwt from '../../../lib/Jwt.lib';
 
@@ -11,7 +12,7 @@ const login = async ({ body: { password } }, res) => {
     const { user } = res.locals;
     const match = await bcrypt.compare(password, user.password);
 
-    if (!match) return res.send(401, { error: 'Senha inválida' });
+    if (!match) res.send(new UnauthorizedError('Senha inválida'));
 
     const jwt = Jwt.encode({ name: user.name });
 
@@ -19,7 +20,7 @@ const login = async ({ body: { password } }, res) => {
 
     return res.send(200, { jwt });
   } catch (error) {
-    return res.send(500, error);
+    return res.send(new InternalServerError({ cause: error }));
   }
 };
 
