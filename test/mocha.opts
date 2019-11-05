@@ -1,1 +1,3 @@
 --reporter mochawesome
+--recursive
+--require sucrase/register

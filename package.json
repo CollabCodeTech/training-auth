@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon src/index.js",
     "build": "sucrase ./src -d ./dist --transforms imports",
-    "test": "NODE_ENV=test mocha --require sucrase/register ./test/**/*.js"
+    "test": "NODE_ENV=test mocha"
   },
   "repository": {
     "type": "git",
