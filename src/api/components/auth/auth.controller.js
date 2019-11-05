@@ -11,7 +11,9 @@ const login = async ({ body: { password } }, res) => {
     const { user } = res.locals;
     const match = await bcrypt.compare(password, user.password);
 
-    if (!match) return res.send(401, { error: 'Senha inválida' });
+    if (!match) {
+      return res.send(401, { field: 'password', error: 'Senha inválida' });
+    }
 
     const jwt = Jwt.encode({ name: user.name });
 

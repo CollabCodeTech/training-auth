@@ -30,6 +30,7 @@ describe(path, () => {
       const { status, body } = await request(server).post(path);
 
       expect(status).to.equal(400);
+      expect(body).to.have.property('field');
       expect(body).to.have.property('error');
     });
 
