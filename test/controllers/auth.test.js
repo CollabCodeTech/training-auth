@@ -122,5 +122,28 @@ describe(path, () => {
     });
   });
 
-  describe('POST /refresh', () => {});
+  describe('POST /refresh', () => {
+    it('should return new JWT when send valid JWT', async () => {
+      const res = await request(server)
+        .post(`${path}/login`)
+        .send({
+          email: newUser.email,
+          password: newUser.password,
+        });
+      const cookiesLogin = res.headers['set-cookie'][0];
+      const loginJwt = cookiesLogin.match(/jwt=([^;]+)/)[1];
+
+      const { headers } = await request(server)
+        .post(`${path}/refresh`)
+        .set('Cookie', [cookiesLogin])
+        .send();
+      const cookies = headers['set-cookie'][0];
+      const newJwt = cookies.match(/jwt=([^;]+)/)[1];
+
+      expect(headers).to.have.property('set-cookie');
+      expect(cookies).to.be.a('string');
+      expect(cookies).to.match(/jwt=/);
+      expect(newJwt).to.not.be.equal(loginJwt);
+    });
+  });
 });

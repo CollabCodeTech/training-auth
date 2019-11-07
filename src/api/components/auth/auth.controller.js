@@ -28,5 +28,16 @@ const login = async ({ body: { password } }, res) => {
   }
 };
 
+const refreshToken = ({ headers: { cookie } }, res) => {
+  const jwt = cookie.match(/jwt=([^;]+)/)[1];
+  const newJwt = Jwt.refresh(jwt);
+
+  setCookieJwt(res, newJwt);
+
+  res.send(200, {
+    msg: 'Token atualizado com sucesso',
+  });
+};
+
 // eslint-disable-next-line import/prefer-default-export
-export { login };
+export { login, refreshToken };
