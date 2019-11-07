@@ -75,7 +75,7 @@ describe(path, () => {
       expect(body).to.have.property('name');
     });
 
-    it('should have Set-Cookie with SameSite=Strict; Secure; HttpOnly and token', async () => {
+    it('shuld return set-cookie and JWT', async () => {
       const { headers } = await request(server)
         .post(path)
         .send({
@@ -83,11 +83,27 @@ describe(path, () => {
           password: newUser.password,
         });
 
+      const cookies = headers['set-cookie'][0];
+
       expect(headers).to.have.property('set-cookie');
-      expect(headers['set-cookie'][0]).to.be.a('string');
-      expect(headers['set-cookie'][0]).to.match(/SameSite=Strict/);
-      expect(headers['set-cookie'][0]).to.match(/Secure/);
-      expect(headers['set-cookie'][0]).to.match(/HttpOnly/);
+      expect(cookies).to.be.a('string');
+      expect(cookies).to.match(/jwt=/);
+    });
+
+    it('should have Set-Cookie with SameSite=Strict; Secure and HttpOnly', async () => {
+      const { headers } = await request(server)
+        .post(path)
+        .send({
+          email: newUser.email,
+          password: newUser.password,
+        });
+      const cookies = headers['set-cookie'][0];
+
+      expect(headers).to.have.property('set-cookie');
+      expect(cookies).to.be.a('string');
+      expect(cookies).to.match(/SameSite=Strict/);
+      expect(cookies).to.match(/Secure/);
+      expect(cookies).to.match(/HttpOnly/);
     });
   });
 });
