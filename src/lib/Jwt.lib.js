@@ -29,12 +29,13 @@ const decode = (token) => {
   return data;
 };
 
-const refresh = (token) => {
+const refresh = (token, options = {}) => {
   const data = decode(token);
 
   delete data.iat;
+  delete data.exp;
 
-  return encode(data);
+  return encode(data, options);
 };
 
 export default { encode, decode, refresh };

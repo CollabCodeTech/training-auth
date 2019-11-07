@@ -57,6 +57,8 @@ describe('Jwt', () => {
   });
 
   describe('#refresh()', () => {
+    afterEach(() => delete data.iat);
+
     it('should return new token when send valid token', () => {
       data.iat = moment
         .utc()
@@ -84,7 +86,15 @@ describe('Jwt', () => {
 
       const token = Jwt.encode(data, { expiresIn: '1day' });
 
-      expect(() => Jwt.refresh(token, { expiresIn: '1day' })).to.throw();
+      expect(() => Jwt.refresh(token)).to.throw();
+    });
+
+    it('should return new token with expire date when send valid token', () => {
+      const token = Jwt.encode(data, { expiresIn: '1day' });
+      const newToken = Jwt.refresh(token, { expiresIn: '1day' });
+      const dataDecode = Jwt.decode(newToken);
+
+      expect(dataDecode).to.have.property('exp');
     });
   });
 });
