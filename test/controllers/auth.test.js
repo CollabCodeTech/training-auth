@@ -4,7 +4,7 @@ import { expect } from 'chai';
 import server from '../../src/api/server';
 import User from '../../src/api/components/user/user.model';
 
-const path = '/api/auth/login';
+const path = '/api/auth';
 
 const newUser = {
   name: 'Marco Antonio Bruno da Silva',
@@ -25,9 +25,9 @@ describe(path, () => {
     await User.deleteMany();
   });
 
-  describe('POST /', () => {
+  describe('POST /login', () => {
     it('should return status 400 and JSON error without email and password', async () => {
-      const { status, body } = await request(server).post(path);
+      const { status, body } = await request(server).post(`${path}/login`);
 
       expect(status).to.equal(400);
       expect(body).to.have.property('field');
@@ -36,7 +36,7 @@ describe(path, () => {
 
     it('should return status 401 and JSON error when email does not exist', async () => {
       const { status, body } = await request(server)
-        .post(path)
+        .post(`${path}/login`)
         .send({ email: 'marco@gmail.com', password: 'ah98sh98sa89s' });
 
       expect(status).to.equal(401);
@@ -45,7 +45,7 @@ describe(path, () => {
 
     it('should return status 401 and JSON error when the not equal password', async () => {
       const { status, body } = await request(server)
-        .post(path)
+        .post(`${path}/login`)
         .send({
           email: newUser.email,
           password: 'asada898ad98',
@@ -57,7 +57,7 @@ describe(path, () => {
 
     it('should return status 200 with valid user and login', async () => {
       const { status } = await request(server)
-        .post(path)
+        .post(`${path}/login`)
         .send({
           email: newUser.email,
           password: newUser.password,
@@ -68,16 +68,16 @@ describe(path, () => {
 
     it('should return json with msg and name', async () => {
       const { body } = await request(server)
-        .post(path)
+        .post(`${path}/login`)
         .send({ email: newUser.email, password: newUser.password });
 
       expect(body).to.have.property('msg');
       expect(body).to.have.property('name');
     });
 
-    it('shuld return set-cookie and JWT', async () => {
+    it('should return set-cookie and JWT', async () => {
       const { headers } = await request(server)
-        .post(path)
+        .post(`${path}/login`)
         .send({
           email: newUser.email,
           password: newUser.password,
@@ -90,9 +90,11 @@ describe(path, () => {
       expect(cookies).to.match(/jwt=/);
     });
 
+    // it('should return JWT with expire date'); TODO
+
     it('should have Set-Cookie with SameSite=Strict; Secure and HttpOnly', async () => {
       const { headers } = await request(server)
-        .post(path)
+        .post(`${path}/login`)
         .send({
           email: newUser.email,
           password: newUser.password,
