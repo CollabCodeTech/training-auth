@@ -15,7 +15,7 @@ const login = async ({ body: { password } }, res) => {
       return res.send(401, { field: 'password', error: 'Senha inválida' });
     }
 
-    const jwt = Jwt.encode({ name: user.name });
+    const jwt = Jwt.encode({ name: user.name }, { expiresIn: '1day' });
 
     setCookieJwt(res, jwt);
 

@@ -3,6 +3,7 @@ import { expect } from 'chai';
 
 import server from '../../src/api/server';
 import User from '../../src/api/components/user/user.model';
+import Jwt from '../../src/lib/Jwt.lib';
 
 const path = '/api/auth';
 
@@ -90,7 +91,19 @@ describe(path, () => {
       expect(cookies).to.match(/jwt=/);
     });
 
-    // it('should return JWT with expire date'); TODO
+    it('should return JWT with expire date', async () => {
+      const { headers } = await request(server)
+        .post(`${path}/login`)
+        .send({
+          email: newUser.email,
+          password: newUser.password,
+        });
+      const cookies = headers['set-cookie'][0];
+      const jwt = cookies.match(/jwt=([^;]+)/)[1];
+      const dataDecode = Jwt.decode(jwt);
+
+      expect(dataDecode).to.have.property('exp');
+    });
 
     it('should have Set-Cookie with SameSite=Strict; Secure and HttpOnly', async () => {
       const { headers } = await request(server)
@@ -108,4 +121,6 @@ describe(path, () => {
       expect(cookies).to.match(/HttpOnly/);
     });
   });
+
+  describe('POST /refresh', () => {});
 });
