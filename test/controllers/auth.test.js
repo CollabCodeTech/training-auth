@@ -156,7 +156,7 @@ describe(path, () => {
       expect(cookiesRefresh).to.match(/HttpOnly/);
     });
 
-    it('should return new JWT when send valid JWT', async () => {
+    it('should return a new token when receiving a valid one', async () => {
       expect(cookiesRefresh).to.match(/jwt=/);
       expect(refreshJwt).to.not.be.equal(loginJwt);
     });
