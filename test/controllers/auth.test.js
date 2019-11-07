@@ -148,9 +148,15 @@ describe(path, () => {
       refreshJwt = cookiesRefresh.match(/jwt=([^;]+)/)[1];
     });
 
-    it('should return new JWT when send valid JWT', async () => {
+    it('should return Set-cookie with SameSite=Strict; Secure and HttpOnly', () => {
       expect(headersRefresh).to.have.property('set-cookie');
       expect(cookiesRefresh).to.be.a('string');
+      expect(cookiesRefresh).to.match(/SameSite=Strict/);
+      expect(cookiesRefresh).to.match(/Secure/);
+      expect(cookiesRefresh).to.match(/HttpOnly/);
+    });
+
+    it('should return new JWT when send valid JWT', async () => {
       expect(cookiesRefresh).to.match(/jwt=/);
       expect(refreshJwt).to.not.be.equal(loginJwt);
     });
