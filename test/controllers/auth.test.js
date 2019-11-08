@@ -6,6 +6,7 @@ import moment from 'moment';
 import server from '../../src/api/server';
 import User from '../../src/api/components/user/user.model';
 import Jwt from '../../src/lib/Jwt.lib';
+import tokenBuilder from '../data-builders/token.builder';
 
 const path = '/api/auth';
 
@@ -192,6 +193,16 @@ describe(path, () => {
     it('should return status 401 when not send token', async () => {
       const { status } = await request(server)
         .post(`${path}/refresh`)
+        .send();
+
+      expect(status).to.equals(401);
+    });
+
+    it('should return status 401 when send invalided token', async () => {
+      const invalidToken = tokenBuilder.generateRandom();
+      const { status } = await request(server)
+        .post(`${path}/refresh`)
+        .set('Cookie', [invalidToken])
         .send();
 
       expect(status).to.equals(401);
