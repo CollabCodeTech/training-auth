@@ -42,6 +42,7 @@ const refreshToken = ({ headers: { cookie } }, res) => {
     if (error.name === 'TokenExpiredError') {
       return res.send(401, { msg: 'Token expirou' });
     }
+
     return res.send(500, error);
   }
 };

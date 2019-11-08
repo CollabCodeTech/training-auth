@@ -23,4 +23,12 @@ const loadUser = async (req, res, next) => {
   return next();
 };
 
-export { hasBody, loadUser };
+const hasCookieJwt = ({ headers: { cookie } }, res, next) => {
+  if (/jwt/.test(cookie)) {
+    return next();
+  }
+
+  return res.send(401, { msg: 'Faltando o jwt no cookie' });
+};
+
+export { hasBody, loadUser, hasCookieJwt };

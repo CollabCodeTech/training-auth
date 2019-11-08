@@ -188,5 +188,13 @@ describe(path, () => {
 
       expect(status).to.equals(401);
     });
+
+    it('should return status 401 when not send token', async () => {
+      const { status } = await request(server)
+        .post(`${path}/refresh`)
+        .send();
+
+      expect(status).to.equals(401);
+    });
   });
 });
