@@ -15,7 +15,7 @@ const login = async ({ body: { password } }, res) => {
       return res.send(401, { field: 'password', error: 'Senha inválida' });
     }
 
-    const jwt = Jwt.encode({ name: user.name });
+    const jwt = Jwt.encode({ name: user.name }, { expiresIn: '1day' });
 
     setCookieJwt(res, jwt);
 
@@ -28,5 +28,23 @@ const login = async ({ body: { password } }, res) => {
   }
 };
 
-// eslint-disable-next-line import/prefer-default-export
-export { login };
+const refreshToken = ({ headers: { cookie } }, res) => {
+  try {
+    const jwt = cookie.match(/jwt=([^;]+)/)[1];
+    const newJwt = Jwt.refresh(jwt);
+
+    setCookieJwt(res, newJwt);
+
+    return res.send(200, {
+      msg: 'Token atualizado com sucesso',
+    });
+  } catch (error) {
+    if (error.name === 'TokenExpiredError') {
+      return res.send(401, { msg: 'Token expirou' });
+    }
+
+    return res.send(500, error);
+  }
+};
+
+export { login, refreshToken };

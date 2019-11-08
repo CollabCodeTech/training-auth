@@ -4,8 +4,10 @@
     "node": true,
     "mocha": true
   },
-  "extends": ["plugin:prettier/recommended", "airbnb-base"],
-  "plugins": ["prettier"],
+  "extends": [
+    "airbnb-base"
+  ],
+  "plugins": [],
   "globals": {
     "Atomics": "readonly",
     "SharedArrayBuffer": "readonly"
@@ -14,7 +16,5 @@
     "ecmaVersion": 2018,
     "sourceType": "module"
   },
-  "rules": {
-    "prettier/prettier": "error"
-  }
+  "rules": {}
 }

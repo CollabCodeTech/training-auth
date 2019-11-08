@@ -1,3 +1,6 @@
 {
-  "*.{js}": ["pretty-quick --staged", "eslint --fix", "git add"]
+  "*.{js}": [
+    "eslint --fix",
+    "git add"
+  ]
 }
