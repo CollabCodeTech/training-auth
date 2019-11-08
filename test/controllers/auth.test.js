@@ -1,6 +1,7 @@
 /* eslint-disable prefer-destructuring */
 import request from 'supertest';
 import { expect } from 'chai';
+import moment from 'moment';
 
 import server from '../../src/api/server';
 import User from '../../src/api/components/user/user.model';
@@ -124,8 +125,10 @@ describe(path, () => {
   });
 
   describe('POST /refresh', () => {
+    let resRefresh;
     let headersRefresh;
     let cookiesRefresh;
+    let cookiesLogin;
     let loginJwt;
     let refreshJwt;
 
@@ -136,16 +139,20 @@ describe(path, () => {
           email: newUser.email,
           password: newUser.password,
         });
-      const cookiesLogin = resLogin.headers['set-cookie'][0];
+      cookiesLogin = resLogin.headers['set-cookie'][0];
       loginJwt = cookiesLogin.match(/jwt=([^;]+)/)[1];
 
-      const resRefresh = await request(server)
+      resRefresh = await request(server)
         .post(`${path}/refresh`)
         .set('Cookie', [cookiesLogin])
         .send();
       headersRefresh = resRefresh.headers;
       cookiesRefresh = headersRefresh['set-cookie'][0];
       refreshJwt = cookiesRefresh.match(/jwt=([^;]+)/)[1];
+    });
+
+    it('should return status 200 when send valid token', () => {
+      expect(resRefresh.status).to.equals(200);
     });
 
     it('should return Set-cookie with SameSite=Strict; Secure and HttpOnly', () => {
@@ -159,6 +166,27 @@ describe(path, () => {
     it('should return a new token when receiving a valid one', async () => {
       expect(cookiesRefresh).to.match(/jwt=/);
       expect(refreshJwt).to.not.be.equal(loginJwt);
+    });
+
+    it('should return status 401 when send expired token', async () => {
+      const iat = moment
+        .utc()
+        .subtract(20, 'days')
+        .unix();
+
+      const token = Jwt.encode(
+        { name: newUser.name, iat },
+        { expiresIn: '1day' },
+      );
+
+      const cookie = cookiesLogin.replace(loginJwt, token);
+
+      const { status } = await request(server)
+        .post(`${path}/refresh`)
+        .set('Cookie', [cookie])
+        .send();
+
+      expect(status).to.equals(401);
     });
   });
 });

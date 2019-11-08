@@ -29,15 +29,21 @@ const login = async ({ body: { password } }, res) => {
 };
 
 const refreshToken = ({ headers: { cookie } }, res) => {
-  const jwt = cookie.match(/jwt=([^;]+)/)[1];
-  const newJwt = Jwt.refresh(jwt);
+  try {
+    const jwt = cookie.match(/jwt=([^;]+)/)[1];
+    const newJwt = Jwt.refresh(jwt);
 
-  setCookieJwt(res, newJwt);
+    setCookieJwt(res, newJwt);
 
-  res.send(200, {
-    msg: 'Token atualizado com sucesso',
-  });
+    return res.send(200, {
+      msg: 'Token atualizado com sucesso',
+    });
+  } catch (error) {
+    if (error.name === 'TokenExpiredError') {
+      return res.send(401, { msg: 'Token expirou' });
+    }
+    return res.send(500, error);
+  }
 };
 
-// eslint-disable-next-line import/prefer-default-export
 export { login, refreshToken };
