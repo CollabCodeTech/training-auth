@@ -3,7 +3,9 @@ import bcrypt from 'bcrypt';
 import Jwt from '../../../lib/Jwt.lib';
 
 const setCookieJwt = (res, jwt) => {
-  res.header('Set-Cookie', `jwt=${jwt}; SameSite=Strict; Secure; HttpOnly`);
+  const { COOKIE_OPTIONS } = process.env;
+
+  res.header('Set-Cookie', `jwt=${jwt}; ${COOKIE_OPTIONS}`);
 };
 
 const login = async ({ body: { password } }, res) => {

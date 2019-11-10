@@ -15,13 +15,11 @@ const server = restify.createServer();
 database();
 
 const { CORS } = process.env;
-const regexCors = new RegExp(CORS);
 
 const cors = corsMiddleware({
-  origins: [regexCors],
+  origins: [CORS],
   credentials: true,
 });
-
 
 server.pre(cors.preflight);
 

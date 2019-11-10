@@ -21,7 +21,7 @@
   "dependencies": {
     "app-root-path": "^2.2.1",
     "bcrypt": "^3.0.6",
-    "dotenv": "^8.1.0",
+    "dotenv": "^8.2.0",
     "helmet": "^3.21.1",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.24.0",
