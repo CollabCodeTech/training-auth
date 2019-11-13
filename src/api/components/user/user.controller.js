@@ -1,3 +1,5 @@
+import { InternalServerError } from 'restify-errors';
+
 import User from './user.model';
 
 const getAll = async (req, res) => {
@@ -6,7 +8,7 @@ const getAll = async (req, res) => {
 
     return res.send(200, users);
   } catch (error) {
-    return res.send(500, error);
+    return res.send(new InternalServerError({ cause: error }));
   }
 };
 
@@ -18,7 +20,7 @@ const save = async ({ body }, res) => {
 
     return res.send(201, user);
   } catch (error) {
-    return res.send(500, error);
+    return res.send(new InternalServerError({ cause: error }));
   }
 };
 

@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt';
+import { UnauthorizedError, InternalServerError } from 'restify-errors';
 
 import Jwt from '../../../lib/Jwt.lib';
 
@@ -12,7 +13,9 @@ const login = async ({ body: { password } }, res) => {
     const match = await bcrypt.compare(password, user.password);
 
     if (!match) {
-      return res.send(401, { field: 'password', error: 'Senha inválida' });
+      return res.send(
+        new UnauthorizedError({ toJSON: () => ({ field: 'password', error: 'Senha inválida' }) }),
+      );
     }
 
     const jwt = Jwt.encode({ name: user.name }, { expiresIn: '1day' });
@@ -20,11 +23,11 @@ const login = async ({ body: { password } }, res) => {
     setCookieJwt(res, jwt);
 
     return res.send(200, {
-      msg: 'Login efeturado com sucesso!',
+      message: 'Login efetuado com sucesso!',
       name: user.name,
     });
   } catch (error) {
-    return res.send(500, error);
+    return res.send(new InternalServerError({ cause: error }));
   }
 };
 
@@ -40,10 +43,10 @@ const refreshToken = ({ headers: { cookie } }, res) => {
     });
   } catch (error) {
     if (error.name === 'TokenExpiredError') {
-      return res.send(401, { msg: 'Token expirou' });
+      return res.send(new UnauthorizedError('Token expirou'));
     }
 
-    return res.send(500, error);
+    return res.send(new InternalServerError({ cause: error }));
   }
 };
 

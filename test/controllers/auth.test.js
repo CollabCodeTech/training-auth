@@ -31,7 +31,8 @@ describe(path, () => {
 
   describe('POST /login', () => {
     it('should return status 400 and JSON error without email and password', async () => {
-      const { status, body } = await request(server).post(`${path}/login`);
+      const res = await request(server).post(`${path}/login`).send();
+      const { status, body } = res;
 
       expect(status).to.equal(400);
       expect(body).to.have.property('field');
@@ -44,6 +45,7 @@ describe(path, () => {
         .send({ email: 'marco@gmail.com', password: 'ah98sh98sa89s' });
 
       expect(status).to.equal(401);
+      expect(body).to.have.property('field');
       expect(body).to.have.property('error');
     });
 
@@ -56,11 +58,12 @@ describe(path, () => {
         });
 
       expect(status).to.equal(401);
+      expect(body).to.have.property('field');
       expect(body).to.have.property('error');
     });
 
     it('should return status 200 with valid user and login', async () => {
-      const { status } = await request(server)
+      const { status, body } = await request(server)
         .post(`${path}/login`)
         .send({
           email: newUser.email,
@@ -68,14 +71,7 @@ describe(path, () => {
         });
 
       expect(status).to.equal(200);
-    });
-
-    it('should return json with msg and name', async () => {
-      const { body } = await request(server)
-        .post(`${path}/login`)
-        .send({ email: newUser.email, password: newUser.password });
-
-      expect(body).to.have.property('msg');
+      expect(body).to.have.property('message');
       expect(body).to.have.property('name');
     });
 
@@ -182,12 +178,13 @@ describe(path, () => {
 
       const cookie = cookiesLogin.replace(loginJwt, token);
 
-      const { status } = await request(server)
+      const { status, body } = await request(server)
         .post(`${path}/refresh`)
         .set('Cookie', [cookie])
         .send();
 
       expect(status).to.equals(401);
+      expect(body).to.have.property('message');
     });
 
     it('should return status 401 when not send token', async () => {
