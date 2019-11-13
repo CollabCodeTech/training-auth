@@ -6,23 +6,22 @@ import moment from 'moment';
 import server from '../../src/api/server';
 import User from '../../src/api/components/user/user.model';
 import Jwt from '../../src/lib/Jwt.lib';
-import tokenBuilder from '../data-builders/token.builder';
+import { UserBuilder, TokenBuilder } from '../data-builders';
 
 const path = '/api/auth';
-
-const newUser = {
-  name: 'Marco Antonio Bruno da Silva',
-  email: 'marco.bruno.br@gmail.com',
-  password: 'q1w2e3r4',
-};
 
 after(() => User.db.close());
 
 describe(path, () => {
+  let plaintextPassword;
+  let newUser;
   before(async () => {
     await User.deleteMany();
 
-    await User.create(newUser);
+    const newUserInfo = UserBuilder.randomUserInfo();
+
+    plaintextPassword = newUserInfo.password;
+    newUser = await UserBuilder.createOne(newUserInfo);
   });
 
   after(async () => {
@@ -42,19 +41,19 @@ describe(path, () => {
     it('should return status 401 and JSON error when email does not exist', async () => {
       const { status, body } = await request(server)
         .post(`${path}/login`)
-        .send({ email: 'marco@gmail.com', password: 'ah98sh98sa89s' });
+        .send({ email: `no${newUser.email}`, password: plaintextPassword });
 
       expect(status).to.equal(401);
       expect(body).to.have.property('field');
       expect(body).to.have.property('error');
     });
 
-    it('should return status 401 and JSON error when the not equal password', async () => {
+    it('should return status 401 and JSON error when password is wrong', async () => {
       const { status, body } = await request(server)
         .post(`${path}/login`)
         .send({
           email: newUser.email,
-          password: 'asada898ad98',
+          password: `wrong${plaintextPassword}wrong`,
         });
 
       expect(status).to.equal(401);
@@ -67,7 +66,7 @@ describe(path, () => {
         .post(`${path}/login`)
         .send({
           email: newUser.email,
-          password: newUser.password,
+          password: plaintextPassword,
         });
 
       expect(status).to.equal(200);
@@ -80,7 +79,7 @@ describe(path, () => {
         .post(`${path}/login`)
         .send({
           email: newUser.email,
-          password: newUser.password,
+          password: plaintextPassword,
         });
 
       const cookies = headers['set-cookie'][0];
@@ -95,7 +94,7 @@ describe(path, () => {
         .post(`${path}/login`)
         .send({
           email: newUser.email,
-          password: newUser.password,
+          password: plaintextPassword,
         });
       const cookies = headers['set-cookie'][0];
       const jwt = cookies.match(/jwt=([^;]+)/)[1];
@@ -109,7 +108,7 @@ describe(path, () => {
         .post(`${path}/login`)
         .send({
           email: newUser.email,
-          password: newUser.password,
+          password: plaintextPassword,
         });
       const cookies = headers['set-cookie'][0];
 
@@ -134,7 +133,7 @@ describe(path, () => {
         .post(`${path}/login`)
         .send({
           email: newUser.email,
-          password: newUser.password,
+          password: plaintextPassword,
         });
       cookiesLogin = resLogin.headers['set-cookie'][0];
       loginJwt = cookiesLogin.match(/jwt=([^;]+)/)[1];
@@ -196,7 +195,7 @@ describe(path, () => {
     });
 
     it('should return status 401 when send invalided token', async () => {
-      const invalidToken = tokenBuilder.generateRandom();
+      const invalidToken = TokenBuilder.generateRandom();
       const { status } = await request(server)
         .post(`${path}/refresh`)
         .set('Cookie', [invalidToken])
