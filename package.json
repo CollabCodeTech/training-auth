@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon src/index.js",
     "build": "sucrase ./src -d ./dist --transforms imports",
-    "test": "NODE_ENV=test mocha --require sucrase/register ./test/**/*.js"
+    "test": "NODE_ENV=test ./node_modules/.bin/nyc ./node_modules/.bin/_mocha"
   },
   "repository": {
     "type": "git",
@@ -45,6 +45,7 @@
     "mocha": "^6.2.2",
     "mochawesome": "^4.1.0",
     "nodemon": "^1.19.3",
+    "nyc": "^14.1.1",
     "sucrase": "^3.10.1",
     "supertest": "^4.0.2"
   }

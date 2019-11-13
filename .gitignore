@@ -4,6 +4,10 @@ mochawesome-report/
 # dotenv environment variables file
 .env
 
+# nyc reports
+.nyc_output/
+coverage/
+
 ### Linux ###
 *~
 
