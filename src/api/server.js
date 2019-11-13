@@ -15,12 +15,13 @@ const server = restify.createServer();
 database();
 
 const { CORS } = process.env;
+const regexCors = new RegExp(CORS);
 
 const cors = corsMiddleware({
-  origins: [CORS],
-  allowHeaders: ['API-Token'],
-  exposeHeaders: ['API-Token-Expiry'],
+  origins: [regexCors],
+  credentials: true,
 });
+
 
 server.pre(cors.preflight);
 
@@ -31,7 +32,7 @@ server.use(
     stream: winston.stream.write,
     // Skip request logging when running the tests
     skip: () => process.env.NODE_ENV === 'test',
-  })
+  }),
 );
 server.use(restify.plugins.bodyParser());
 

@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt';
+import { UnauthorizedError, InternalServerError } from 'restify-errors';
 
 import Jwt from '../../../lib/Jwt.lib';
 
@@ -12,21 +13,41 @@ const login = async ({ body: { password } }, res) => {
     const match = await bcrypt.compare(password, user.password);
 
     if (!match) {
-      return res.send(401, { field: 'password', error: 'Senha inválida' });
+      return res.send(
+        new UnauthorizedError({ toJSON: () => ({ field: 'password', error: 'Senha inválida' }) }),
+      );
     }
 
-    const jwt = Jwt.encode({ name: user.name });
+    const jwt = Jwt.encode({ name: user.name }, { expiresIn: '1day' });
 
     setCookieJwt(res, jwt);
 
     return res.send(200, {
-      msg: 'Login efeturado com sucesso!',
+      message: 'Login efetuado com sucesso!',
       name: user.name,
     });
   } catch (error) {
-    return res.send(500, error);
+    return res.send(new InternalServerError({ cause: error }));
   }
 };
 
-// eslint-disable-next-line import/prefer-default-export
-export { login };
+const refreshToken = ({ headers: { cookie } }, res) => {
+  try {
+    const jwt = cookie.match(/jwt=([^;]+)/)[1];
+    const newJwt = Jwt.refresh(jwt);
+
+    setCookieJwt(res, newJwt);
+
+    return res.send(200, {
+      msg: 'Token atualizado com sucesso',
+    });
+  } catch (error) {
+    if (error.name === 'TokenExpiredError') {
+      return res.send(new UnauthorizedError('Token expirou'));
+    }
+
+    return res.send(new InternalServerError({ cause: error }));
+  }
+};
+
+export { login, refreshToken };

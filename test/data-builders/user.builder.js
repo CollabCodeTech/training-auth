@@ -2,29 +2,27 @@ import faker from 'faker';
 
 import User from '../../src/api/components/user/user.model';
 
-export default class UserBuilder {
-  static randomUserInfo(options = {}) {
-    const blank = {};
+const generateName = () => {
+  const firstName = faker.name.firstName();
+  const lastName = faker.name.lastName();
 
-    return Object.assign(
-      blank,
-      {
-        name: this.generateName(),
-        email: faker.internet.email(),
-        password: faker.internet.password(),
-      },
-      { ...options },
-    );
-  }
+  return `${firstName} ${lastName}`;
+};
 
-  static createOne(options) {
-    return User.create(this.randomUserInfo(options));
-  }
+const randomUserInfo = (options = {}) => {
+  const blank = {};
 
-  static generateName() {
-    const firstName = faker.name.firstName();
-    const lastName = faker.name.lastName();
+  return Object.assign(
+    blank,
+    {
+      name: generateName(),
+      email: faker.internet.email(),
+      password: faker.internet.password(),
+    },
+    { ...options },
+  );
+};
 
-    return `${firstName} ${lastName}`;
-  }
-}
+const createOne = (options) => User.create(randomUserInfo(options));
+
+export default { randomUserInfo, createOne };

@@ -3,5 +3,6 @@
   "files.associations": {
     ".huskyrc": "json",
     ".lintstagedrc": "json"
-  }
+  },
+  "eslint.autoFixOnSave": true
 }

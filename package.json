@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon src/index.js",
     "build": "sucrase ./src -d ./dist --transforms imports",
-    "test": "NODE_ENV=test mocha"
+    "test": "NODE_ENV=test ./node_modules/.bin/nyc ./node_modules/.bin/_mocha"
   },
   "repository": {
     "type": "git",
@@ -23,13 +23,13 @@
     "bcrypt": "^3.0.6",
     "dotenv": "^8.1.0",
     "helmet": "^3.21.1",
-    "jose": "^1.10.1",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.24.0",
     "mongoose": "^5.7.5",
     "morgan": "^1.9.1",
     "restify": "^8.4.0",
     "restify-cors-middleware": "^1.1.1",
+    "restify-errors": "^8.0.1",
     "restify-jwt-community": "^1.1.0",
     "saslprep": "^1.0.3",
     "winston": "^3.2.1"
@@ -38,17 +38,14 @@
     "chai": "^4.2.0",
     "eslint": "^6.5.1",
     "eslint-config-airbnb-base": "^14.0.0",
-    "eslint-config-prettier": "^6.4.0",
     "eslint-plugin-import": "^2.18.2",
-    "eslint-plugin-prettier": "^3.1.1",
     "faker": "^4.1.0",
     "husky": "^3.0.9",
     "lint-staged": "^9.4.2",
     "mocha": "^6.2.2",
     "mochawesome": "^4.1.0",
     "nodemon": "^1.19.3",
-    "prettier": "^1.18.2",
-    "pretty-quick": "^2.0.0",
+    "nyc": "^14.1.1",
     "sucrase": "^3.10.1",
     "supertest": "^4.0.2"
   }
