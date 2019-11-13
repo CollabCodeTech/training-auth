@@ -24,14 +24,16 @@ const UserSchema = new Schema({
 });
 
 async function bcryptPassword(next) {
-  try {
-    const hash = await bcrypt.hash(this.password, 10);
-    this.password = hash;
-
-    next();
-  } catch (error) {
-    next(error);
+  if (this.isModified('password')) {
+    try {
+      const hash = await bcrypt.hash(this.password, 10);
+      this.password = hash;
+    } catch (error) {
+      return next(error);
+    }
   }
+
+  return next();
 }
 
 UserSchema.pre('save', bcryptPassword);
