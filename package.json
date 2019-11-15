@@ -32,7 +32,8 @@
     "restify-errors": "^8.0.1",
     "restify-jwt-community": "^1.1.0",
     "saslprep": "^1.0.3",
-    "winston": "^3.2.1"
+    "winston": "^3.2.1",
+    "yup": "^0.27.0"
   },
   "devDependencies": {
     "chai": "^4.2.0",
