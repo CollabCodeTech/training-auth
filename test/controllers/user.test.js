@@ -3,7 +3,7 @@ import { expect } from 'chai';
 
 import User from '../../src/api/components/user/user.model';
 import server from '../../src/api/server';
-import UserBuilder from '../data-builders';
+import { UserBuilder } from '../data-builders';
 
 const prefix = '/api';
 

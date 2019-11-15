@@ -115,7 +115,6 @@ describe(path, () => {
       expect(headers).to.have.property('set-cookie');
       expect(cookies).to.be.a('string');
       expect(cookies).to.match(/SameSite=Strict/);
-      expect(cookies).to.match(/Secure/);
       expect(cookies).to.match(/HttpOnly/);
     });
   });
@@ -155,7 +154,6 @@ describe(path, () => {
       expect(headersRefresh).to.have.property('set-cookie');
       expect(cookiesRefresh).to.be.a('string');
       expect(cookiesRefresh).to.match(/SameSite=Strict/);
-      expect(cookiesRefresh).to.match(/Secure/);
       expect(cookiesRefresh).to.match(/HttpOnly/);
     });
 
