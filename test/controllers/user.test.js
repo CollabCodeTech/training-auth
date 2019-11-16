@@ -20,11 +20,39 @@ describe(`${prefix}/users`, () => {
   });
 
   describe('POST /', () => {
-    it('should return 400 when the body doesn\'t have name, email or password', async () => {
+    it('should return 400 when the body doesn\'t have name, email and password', async () => {
       const { status } = await request(server)
         .post(`${prefix}/users`);
 
       expect(status).to.equals(400);
+    });
+
+    it('should return a array with keys field and error when the body doesn\'t have name, email and password', async () => {
+      const { body } = await request(server)
+        .post(`${prefix}/users`);
+
+
+      expect(body).to.be.an('array');
+      expect(body.length).to.equal(3);
+      expect(body[0]).to.have.property('field');
+      expect(body[0]).to.have.property('error');
+      expect(body[1]).to.have.property('field');
+      expect(body[1]).to.have.property('error');
+      expect(body[2]).to.have.property('field');
+      expect(body[2]).to.have.property('error');
+    });
+
+    it('should return a array with key field filled by email when email is invalid', async () => {
+      const emailInvalid = UserBuilder.emailInvalid();
+
+      const { body } = await request(server)
+        .post(`${prefix}/users`)
+        .send(emailInvalid);
+
+      const errorEmail = () => body.find((error) => error.field === 'email');
+
+      expect(body).to.be.an('array');
+      expect(errorEmail().field).to.equal('email');
     });
 
     it('should return a user when the all request body is valid', async () => {

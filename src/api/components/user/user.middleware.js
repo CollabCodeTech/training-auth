@@ -18,7 +18,9 @@ const schema = yup.object().shape({
 
 const hasBody = ({ body }, res, next) => {
   schema.validate(body, { abortEarly: false }).then(() => next()).catch((error) => {
-    res.send(400);
+    const msgError = error.inner.map(({ path, message }) => ({ field: path, error: message }));
+
+    res.send(400, msgError);
   });
 };
 
