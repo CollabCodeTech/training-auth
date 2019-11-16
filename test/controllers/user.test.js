@@ -20,18 +20,25 @@ describe(`${prefix}/users`, () => {
   });
 
   describe('POST /', () => {
-    it('should return user when the all request body is valid', async () => {
+    it('should return 400 when the body doesn\'t have name, email or password', async () => {
+      const { status } = await request(server)
+        .post(`${prefix}/users`);
+
+      expect(status).to.equals(400);
+    });
+
+    it('should return a user when the all request body is valid', async () => {
       const newUser = UserBuilder.randomUserInfo();
 
-      const res = await request(server)
+      const { status, body } = await request(server)
         .post(`${prefix}/users`)
         .send(newUser);
 
-      expect(res.status).to.equal(201);
-      expect(res.body).to.have.property('_id');
-      expect(res.body).to.have.property('name', newUser.name);
-      expect(res.body).to.have.property('email', newUser.email.toLowerCase());
-      expect(res.body).to.not.have.property('password');
+      expect(status).to.equal(201);
+      expect(body).to.have.property('_id');
+      expect(body).to.have.property('name', newUser.name);
+      expect(body).to.have.property('email', newUser.email.toLowerCase());
+      expect(body).to.not.have.property('password');
     });
   });
 });
