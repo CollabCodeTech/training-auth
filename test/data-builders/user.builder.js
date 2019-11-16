@@ -27,4 +27,8 @@ const createOne = (options) => User.create(randomUserInfo(options));
 
 const emailInvalid = () => ({ email: faker.lorem.word() });
 
-export default { randomUserInfo, createOne, emailInvalid };
+const passwordInvalid = () => ({ password: faker.internet.password(7) });
+
+export default {
+  randomUserInfo, createOne, emailInvalid, passwordInvalid,
+};
