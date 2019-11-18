@@ -1,4 +1,7 @@
+import { ConflictError } from 'restify-errors';
 import * as yup from 'yup';
+
+import User from './user.model';
 
 yup.setLocale({
   mixed: {
@@ -17,7 +20,17 @@ const schema = yup.object().shape({
 });
 
 const hasBody = ({ body }, res, next) => {
-  schema.validate(body, { abortEarly: false }).then(() => next()).catch((error) => {
+  schema.validate(body, { abortEarly: false }).then(
+    async () => {
+      const user = await User.find({ email: body.email });
+
+      if (user.length) {
+        return res.send(new ConflictError({ toJSON: () => ([{ field: 'email', error: 'Email já cadastrado' }]) }));
+      }
+
+      return next();
+    },
+  ).catch((error) => {
     const msgError = error.inner.map(({ path, message }) => ({ field: path, error: message }));
 
     res.send(400, msgError);
