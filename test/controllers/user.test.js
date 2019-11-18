@@ -45,8 +45,6 @@ describe(`${prefix}/users`, () => {
     it('should return an array with key field filled by name when name smaller than 2 chars', async () => {
       const nameInvalid = UserBuilder.nameInvalid();
 
-      console.log('NAME INVALID', nameInvalid);
-
       const { body } = await request(server)
         .post(`${prefix}/users`)
         .send(nameInvalid);
