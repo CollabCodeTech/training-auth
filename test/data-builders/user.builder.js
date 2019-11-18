@@ -25,4 +25,12 @@ const randomUserInfo = (options = {}) => {
 
 const createOne = (options) => User.create(randomUserInfo(options));
 
-export default { randomUserInfo, createOne };
+const emailInvalid = () => ({ email: faker.lorem.word() });
+
+const passwordInvalid = () => ({ password: faker.internet.password(7) });
+
+const nameInvalid = () => ({ name: faker.internet.password(1) });
+
+export default {
+  randomUserInfo, createOne, emailInvalid, passwordInvalid, nameInvalid,
+};

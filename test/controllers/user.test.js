@@ -20,18 +20,79 @@ describe(`${prefix}/users`, () => {
   });
 
   describe('POST /', () => {
-    it('should return user when the all request body is valid', async () => {
+    it('should return 400 when the body doesn\'t have name, email and password', async () => {
+      const { status } = await request(server)
+        .post(`${prefix}/users`);
+
+      expect(status).to.equals(400);
+    });
+
+    it('should return an array with keys field and error when the body doesn\'t have name, email and password', async () => {
+      const { body } = await request(server)
+        .post(`${prefix}/users`);
+
+
+      expect(body).to.be.an('array');
+      expect(body.length).to.equal(3);
+      expect(body[0]).to.have.property('field');
+      expect(body[0]).to.have.property('error');
+      expect(body[1]).to.have.property('field');
+      expect(body[1]).to.have.property('error');
+      expect(body[2]).to.have.property('field');
+      expect(body[2]).to.have.property('error');
+    });
+
+    it('should return an array with key field filled by name when name smaller than 2 chars', async () => {
+      const nameInvalid = UserBuilder.nameInvalid();
+
+      const { body } = await request(server)
+        .post(`${prefix}/users`)
+        .send(nameInvalid);
+
+      const errorName = () => body.find((error) => error.field === 'name');
+
+      expect(body).to.be.an('array');
+      expect(errorName().field).to.equal('name');
+    });
+
+    it('should return an array with key field filled by email when email is invalid', async () => {
+      const emailInvalid = UserBuilder.emailInvalid();
+
+      const { body } = await request(server)
+        .post(`${prefix}/users`)
+        .send(emailInvalid);
+
+      const errorEmail = () => body.find((error) => error.field === 'email');
+
+      expect(body).to.be.an('array');
+      expect(errorEmail().field).to.equal('email');
+    });
+
+    it('should return an array with key field filled by password when password is smaller than 8 chars', async () => {
+      const passwordInvalid = UserBuilder.passwordInvalid();
+
+      const { body } = await request(server)
+        .post(`${prefix}/users`)
+        .send(passwordInvalid);
+
+      const errorPassword = () => body.find((error) => error.field === 'password');
+
+      expect(body).to.be.an('array');
+      expect(errorPassword().field).to.equal('password');
+    });
+
+    it('should return a user when the all request body is valid', async () => {
       const newUser = UserBuilder.randomUserInfo();
 
-      const res = await request(server)
+      const { status, body } = await request(server)
         .post(`${prefix}/users`)
         .send(newUser);
 
-      expect(res.status).to.equal(201);
-      expect(res.body).to.have.property('_id');
-      expect(res.body).to.have.property('name', newUser.name);
-      expect(res.body).to.have.property('email', newUser.email.toLowerCase());
-      expect(res.body).to.not.have.property('password');
+      expect(status).to.equal(201);
+      expect(body).to.have.property('_id');
+      expect(body).to.have.property('name', newUser.name);
+      expect(body).to.have.property('email', newUser.email.toLowerCase());
+      expect(body).to.not.have.property('password');
     });
   });
 });
