@@ -19,12 +19,14 @@ const schema = yup.object().shape({
   password: yup.string().min(8).required(),
 });
 
+const userAlreadyExists = (user) => !!user.length;
+
 const hasBody = ({ body }, res, next) => {
   schema.validate(body, { abortEarly: false }).then(
     async () => {
       const user = await User.find({ email: body.email });
 
-      if (user.length) {
+      if (userAlreadyExists(user)) {
         return res.send(new ConflictError({ toJSON: () => ([{ field: 'email', error: 'Email já cadastrado' }]) }));
       }
 
