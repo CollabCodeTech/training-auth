@@ -43,11 +43,12 @@ describe(`${prefix}/users`, () => {
     });
 
     it('should return an array with key field filled by name when name smaller than 2 chars', async () => {
+      const newUser = UserBuilder.randomUserInfo();
       const nameInvalid = UserBuilder.nameInvalid();
 
       const { body } = await request(server)
         .post(`${prefix}/users`)
-        .send(nameInvalid);
+        .send({ ...newUser, ...nameInvalid });
 
       const errorName = () => body.find((error) => error.field === 'name');
 
@@ -65,6 +66,23 @@ describe(`${prefix}/users`, () => {
       const errorEmail = () => body.find((error) => error.field === 'email');
 
       expect(body).to.be.an('array');
+      expect(errorEmail().field).to.equal('email');
+    });
+
+    it('should return status 409 and an array with key field filled by email when send registered email', async () => {
+      const newUser = UserBuilder.randomUserInfo();
+
+      await request(server)
+        .post(`${prefix}/users`)
+        .send(newUser);
+
+      const { status, body } = await request(server)
+        .post(`${prefix}/users`)
+        .send(newUser);
+
+      const errorEmail = () => body.find((error) => error.field === 'email');
+
+      expect(status).to.equal(409);
       expect(errorEmail().field).to.equal('email');
     });
 
