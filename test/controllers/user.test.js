@@ -42,6 +42,21 @@ describe(`${prefix}/users`, () => {
       expect(body[2]).to.have.property('error');
     });
 
+    it('should return an array with key field filled by name when name smaller than 2 chars', async () => {
+      const nameInvalid = UserBuilder.nameInvalid();
+
+      console.log('NAME INVALID', nameInvalid);
+
+      const { body } = await request(server)
+        .post(`${prefix}/users`)
+        .send(nameInvalid);
+
+      const errorName = () => body.find((error) => error.field === 'name');
+
+      expect(body).to.be.an('array');
+      expect(errorName().field).to.equal('name');
+    });
+
     it('should return an array with key field filled by email when email is invalid', async () => {
       const emailInvalid = UserBuilder.emailInvalid();
 
