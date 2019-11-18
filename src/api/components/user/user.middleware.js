@@ -1,4 +1,4 @@
-import { ConflictError } from 'restify-errors';
+import { ConflictError, BadRequestError } from 'restify-errors';
 import * as yup from 'yup';
 
 import User from './user.model';
@@ -35,7 +35,7 @@ const hasBody = ({ body }, res, next) => {
   ).catch((error) => {
     const msgError = error.inner.map(({ path, message }) => ({ field: path, error: message }));
 
-    res.send(400, msgError);
+    res.send(new BadRequestError({ toJSON: () => (msgError) }));
   });
 };
 
