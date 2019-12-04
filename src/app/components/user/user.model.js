@@ -6,21 +6,21 @@ const UserSchema = new Schema({
     type: String,
     required: true,
     minlength: 2,
-    maxlength: 50,
+    maxlength: 50
   },
   email: {
     type: String,
     required: true,
     trim: true,
     lowercase: true,
-    unique: true,
+    unique: true
   },
   password: {
     type: String,
     required: true,
     minlength: 8,
-    select: false,
-  },
+    select: false
+  }
 });
 
 async function bcryptPassword(next) {

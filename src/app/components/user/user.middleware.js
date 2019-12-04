@@ -5,40 +5,56 @@ import User from './user.model';
 
 yup.setLocale({
   mixed: {
-    required: 'Campo obrigatório',
+    required: 'Campo obrigatório'
   },
   string: {
     email: 'Por favor, preencha com email válido',
-    min: ({ min }) => `Use no mínimo ${min} caracteres`,
-  },
+    min: ({ min }) => `Use no mínimo ${min} caracteres`
+  }
 });
 
 const schema = yup.object().shape({
-  name: yup.string().min(2).required(),
-  email: yup.string().email().required(),
-  password: yup.string().min(8).required(),
+  name: yup
+    .string()
+    .min(2)
+    .required(),
+  email: yup
+    .string()
+    .email()
+    .required(),
+  password: yup
+    .string()
+    .min(8)
+    .required()
 });
 
-const userAlreadyExists = (user) => !!user.length;
+const userAlreadyExists = user => !!user.length;
 
 const hasBody = ({ body }, res, next) => {
-  schema.validate(body, { abortEarly: false }).then(
-    async () => {
+  schema
+    .validate(body, { abortEarly: false })
+    .then(async () => {
       const user = await User.find({ email: body.email });
 
       if (userAlreadyExists(user)) {
-        return res.send(new ConflictError({ toJSON: () => ([{ field: 'email', error: 'Email já cadastrado' }]) }));
+        return res.send(
+          new ConflictError({
+            toJSON: () => [{ field: 'email', error: 'Email já cadastrado' }]
+          })
+        );
       }
 
       return next();
-    },
-  ).catch((error) => {
-    const msgError = error.inner.map(({ path, message }) => ({ field: path, error: message }));
+    })
+    .catch(error => {
+      const msgError = error.inner.map(({ path, message }) => ({
+        field: path,
+        error: message
+      }));
 
-    res.send(new BadRequestError({ toJSON: () => (msgError) }));
-  });
+      res.send(new BadRequestError({ toJSON: () => msgError }));
+    });
 };
-
 
 // eslint-disable-next-line import/prefer-default-export
 export { hasBody };
