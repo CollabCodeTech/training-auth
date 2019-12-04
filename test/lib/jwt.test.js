@@ -1,11 +1,11 @@
 import moment from 'moment';
 import { expect } from 'chai';
 
-import Jwt from '../../src/lib/Jwt.lib';
+import Jwt from '../../src/lib/jwt.lib';
 
 const data = { name: 'Marco Bruno', email: 'marco.bruno.br@gmail.com' };
 
-describe('Jwt', () => {
+describe('jwt.lib', () => {
   describe('#encode()', () => {
     let token;
 
