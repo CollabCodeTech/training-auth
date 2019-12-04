@@ -3,23 +3,13 @@ import { InternalServerError } from 'restify-errors';
 
 import User from './user.model';
 
-const getAll = async (req, res) => {
-  try {
-    const users = await User.find();
-
-    return res.send(200, users);
-  } catch (error) {
-    return res.send(new InternalServerError({ cause: error }));
-  }
-};
-
 const save = async ({ body }, res) => {
   try {
     const user = await User.create(body);
 
     user.password = undefined;
 
-    superagent.post('http://localhost:5002/user/confirmation').send({
+    await superagent.post('http://localhost:5002/user/confirmation').send({
       email: body.email,
       link: 'http://localhost:5001/user/confirmation'
     });
@@ -30,4 +20,5 @@ const save = async ({ body }, res) => {
   }
 };
 
-export { getAll, save };
+// eslint-disable-next-line import/prefer-default-export
+export { save };

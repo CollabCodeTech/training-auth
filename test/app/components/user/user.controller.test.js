@@ -11,14 +11,6 @@ describe(`${prefix}/users`, () => {
   before(() => User.deleteMany());
   after(() => User.deleteMany());
 
-  describe('GET /', () => {
-    it('should return all users', async () => {
-      const res = await request(server).get(`${prefix}/users`);
-
-      expect(res.status).to.equal(200);
-    });
-  });
-
   describe('POST /', () => {
     it("should return 400 when the body doesn't have name, email and password", async () => {
       const { status } = await request(server).post(`${prefix}/users`);
