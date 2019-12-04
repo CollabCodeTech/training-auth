@@ -5,7 +5,7 @@ import moment from 'moment';
 
 import server from '../../../../src/app/server';
 import User from '../../../../src/app/components/user/user.model';
-import Jwt from '../../../../src/lib/Jwt.lib';
+import Jwt from '../../../../src/lib/jwt.lib';
 import { UserBuilder, TokenBuilder } from '../../../data-builders';
 
 const path = '/api/auth';
@@ -15,6 +15,7 @@ after(() => User.db.close());
 describe(path, () => {
   let plaintextPassword;
   let newUser;
+
   before(async () => {
     await User.deleteMany();
 

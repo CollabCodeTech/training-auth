@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import { UnauthorizedError, InternalServerError } from 'restify-errors';
 
-import Jwt from '../../../lib/Jwt.lib';
+import Jwt from '../../../lib/jwt.lib';
 
 const setCookieJwt = (res, jwt) => {
   const { COOKIE_OPTIONS } = process.env;
