@@ -11,7 +11,7 @@ const filePublicKey = readFileSync(AUTH_PUBLIC_KEY_PATH);
 const sign = (data, jwtOptions = {}) => {
   const token = jwt.sign(data, filePrivateKey, {
     ...jwtOptions,
-    algorithm: ALGORITHM,
+    algorithm: ALGORITHM
   });
 
   return token;
@@ -23,7 +23,7 @@ const encode = (data, options = {}) => {
   return token;
 };
 
-const decode = (token) => {
+const decode = token => {
   const data = jwt.verify(token, filePublicKey, { algorithms: [ALGORITHM] });
 
   return data;
