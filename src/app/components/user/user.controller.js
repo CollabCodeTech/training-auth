@@ -1,3 +1,4 @@
+import superagent from 'superagent';
 import { InternalServerError } from 'restify-errors';
 
 import User from './user.model';
@@ -17,6 +18,11 @@ const save = async ({ body }, res) => {
     const user = await User.create(body);
 
     user.password = undefined;
+
+    superagent.post('http://localhost:5002/user/confirmation').send({
+      email: body.email,
+      link: 'http://localhost:5001/user/confirmation'
+    });
 
     return res.send(201, user);
   } catch (error) {

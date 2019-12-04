@@ -16,7 +16,9 @@ const login = async ({ body: { password } }, res) => {
 
     if (!match) {
       return res.send(
-        new UnauthorizedError({ toJSON: () => ({ field: 'password', error: 'Senha inválida' }) }),
+        new UnauthorizedError({
+          toJSON: () => ({ field: 'password', error: 'Senha inválida' })
+        })
       );
     }
 
@@ -26,7 +28,7 @@ const login = async ({ body: { password } }, res) => {
 
     return res.send(200, {
       message: 'Login efetuado com sucesso!',
-      name: user.name,
+      name: user.name
     });
   } catch (error) {
     return res.send(new InternalServerError({ cause: error }));
@@ -41,7 +43,7 @@ const refreshToken = ({ headers: { cookie } }, res) => {
     setCookieJwt(res, newJwt);
 
     return res.send(200, {
-      msg: 'Token atualizado com sucesso',
+      msg: 'Token atualizado com sucesso'
     });
   } catch (error) {
     if (error.name === 'TokenExpiredError') {

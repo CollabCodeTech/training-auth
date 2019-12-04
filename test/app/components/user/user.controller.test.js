@@ -1,9 +1,9 @@
 import request from 'supertest';
 import { expect } from 'chai';
 
-import User from '../../src/api/components/user/user.model';
-import server from '../../src/api/server';
-import { UserBuilder } from '../data-builders';
+import User from '../../../../src/app/components/user/user.model';
+import server from '../../../../src/app/server';
+import { UserBuilder } from '../../../data-builders';
 
 const prefix = '/api';
 
@@ -20,17 +20,14 @@ describe(`${prefix}/users`, () => {
   });
 
   describe('POST /', () => {
-    it('should return 400 when the body doesn\'t have name, email and password', async () => {
-      const { status } = await request(server)
-        .post(`${prefix}/users`);
+    it("should return 400 when the body doesn't have name, email and password", async () => {
+      const { status } = await request(server).post(`${prefix}/users`);
 
       expect(status).to.equals(400);
     });
 
-    it('should return an array with keys field and error when the body doesn\'t have name, email and password', async () => {
-      const { body } = await request(server)
-        .post(`${prefix}/users`);
-
+    it("should return an array with keys field and error when the body doesn't have name, email and password", async () => {
+      const { body } = await request(server).post(`${prefix}/users`);
 
       expect(body).to.be.an('array');
       expect(body.length).to.equal(3);
@@ -50,7 +47,7 @@ describe(`${prefix}/users`, () => {
         .post(`${prefix}/users`)
         .send({ ...newUser, ...nameInvalid });
 
-      const errorName = () => body.find((error) => error.field === 'name');
+      const errorName = () => body.find(error => error.field === 'name');
 
       expect(body).to.be.an('array');
       expect(errorName().field).to.equal('name');
@@ -63,7 +60,7 @@ describe(`${prefix}/users`, () => {
         .post(`${prefix}/users`)
         .send(emailInvalid);
 
-      const errorEmail = () => body.find((error) => error.field === 'email');
+      const errorEmail = () => body.find(error => error.field === 'email');
 
       expect(body).to.be.an('array');
       expect(errorEmail().field).to.equal('email');
@@ -80,7 +77,7 @@ describe(`${prefix}/users`, () => {
         .post(`${prefix}/users`)
         .send(newUser);
 
-      const errorEmail = () => body.find((error) => error.field === 'email');
+      const errorEmail = () => body.find(error => error.field === 'email');
 
       expect(status).to.equal(409);
       expect(errorEmail().field).to.equal('email');
@@ -93,7 +90,8 @@ describe(`${prefix}/users`, () => {
         .post(`${prefix}/users`)
         .send(passwordInvalid);
 
-      const errorPassword = () => body.find((error) => error.field === 'password');
+      const errorPassword = () =>
+        body.find(error => error.field === 'password');
 
       expect(body).to.be.an('array');
       expect(errorPassword().field).to.equal('password');

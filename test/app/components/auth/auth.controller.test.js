@@ -3,10 +3,10 @@ import request from 'supertest';
 import { expect } from 'chai';
 import moment from 'moment';
 
-import server from '../../src/api/server';
-import User from '../../src/api/components/user/user.model';
-import Jwt from '../../src/lib/Jwt.lib';
-import { UserBuilder, TokenBuilder } from '../data-builders';
+import server from '../../../../src/app/server';
+import User from '../../../../src/app/components/user/user.model';
+import Jwt from '../../../../src/lib/Jwt.lib';
+import { UserBuilder, TokenBuilder } from '../../../data-builders';
 
 const path = '/api/auth';
 
@@ -30,7 +30,9 @@ describe(path, () => {
 
   describe('POST /login', () => {
     it('should return status 400 and JSON error without email and password', async () => {
-      const res = await request(server).post(`${path}/login`).send();
+      const res = await request(server)
+        .post(`${path}/login`)
+        .send();
       const { status, body } = res;
 
       expect(status).to.equal(400);
@@ -53,7 +55,7 @@ describe(path, () => {
         .post(`${path}/login`)
         .send({
           email: newUser.email,
-          password: `wrong${plaintextPassword}wrong`,
+          password: `wrong${plaintextPassword}wrong`
         });
 
       expect(status).to.equal(401);
@@ -66,7 +68,7 @@ describe(path, () => {
         .post(`${path}/login`)
         .send({
           email: newUser.email,
-          password: plaintextPassword,
+          password: plaintextPassword
         });
 
       expect(status).to.equal(200);
@@ -79,7 +81,7 @@ describe(path, () => {
         .post(`${path}/login`)
         .send({
           email: newUser.email,
-          password: plaintextPassword,
+          password: plaintextPassword
         });
 
       const cookies = headers['set-cookie'][0];
@@ -94,7 +96,7 @@ describe(path, () => {
         .post(`${path}/login`)
         .send({
           email: newUser.email,
-          password: plaintextPassword,
+          password: plaintextPassword
         });
       const cookies = headers['set-cookie'][0];
       const jwt = cookies.match(/jwt=([^;]+)/)[1];
@@ -108,7 +110,7 @@ describe(path, () => {
         .post(`${path}/login`)
         .send({
           email: newUser.email,
-          password: plaintextPassword,
+          password: plaintextPassword
         });
       const cookies = headers['set-cookie'][0];
 
@@ -132,7 +134,7 @@ describe(path, () => {
         .post(`${path}/login`)
         .send({
           email: newUser.email,
-          password: plaintextPassword,
+          password: plaintextPassword
         });
       cookiesLogin = resLogin.headers['set-cookie'][0];
       loginJwt = cookiesLogin.match(/jwt=([^;]+)/)[1];
@@ -170,7 +172,7 @@ describe(path, () => {
 
       const token = Jwt.encode(
         { name: newUser.name, iat },
-        { expiresIn: '1day' },
+        { expiresIn: '1day' }
       );
 
       const cookie = cookiesLogin.replace(loginJwt, token);

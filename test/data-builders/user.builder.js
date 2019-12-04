@@ -1,6 +1,6 @@
 import faker from 'faker';
 
-import User from '../../src/api/components/user/user.model';
+import User from '../../src/app/components/user/user.model';
 
 const generateName = () => {
   const firstName = faker.name.firstName();
@@ -32,5 +32,9 @@ const passwordInvalid = () => ({ password: faker.internet.password(7) });
 const nameInvalid = () => ({ name: faker.internet.password(1) });
 
 export default {
-  randomUserInfo, createOne, emailInvalid, passwordInvalid, nameInvalid,
+  randomUserInfo,
+  createOne,
+  emailInvalid,
+  passwordInvalid,
+  nameInvalid,
 };

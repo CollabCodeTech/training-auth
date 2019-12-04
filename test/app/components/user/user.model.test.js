@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import User from '../../../../src/api/components/user/user.model';
+import User from '../../../../src/app/components/user/user.model';
 
 import UserBuilder from '../../../data-builders/user.builder';
 

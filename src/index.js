@@ -1,6 +1,6 @@
 import { config } from 'dotenv';
 
-import server from './api/server';
+import server from './app/server';
 import logger from './config/winston';
 
 config();
