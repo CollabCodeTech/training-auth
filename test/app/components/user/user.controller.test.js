@@ -7,19 +7,19 @@ import { UserBuilder } from '../../../data-builders';
 
 const prefix = '/api';
 
-describe(`${prefix}/users`, () => {
+describe(`${prefix}/user`, () => {
   before(() => User.deleteMany());
   after(() => User.deleteMany());
 
   describe('POST /', () => {
     it("should return 400 when the body doesn't have name, email and password", async () => {
-      const { status } = await request(server).post(`${prefix}/users`);
+      const { status } = await request(server).post(`${prefix}/user`);
 
       expect(status).to.equals(400);
     });
 
     it("should return an array with keys field and error when the body doesn't have name, email and password", async () => {
-      const { body } = await request(server).post(`${prefix}/users`);
+      const { body } = await request(server).post(`${prefix}/user`);
 
       expect(body).to.be.an('array');
       expect(body.length).to.equal(3);
@@ -36,7 +36,7 @@ describe(`${prefix}/users`, () => {
       const nameInvalid = UserBuilder.nameInvalid();
 
       const { body } = await request(server)
-        .post(`${prefix}/users`)
+        .post(`${prefix}/user`)
         .send({ ...newUser, ...nameInvalid });
 
       const errorName = () => body.find(error => error.field === 'name');
@@ -49,7 +49,7 @@ describe(`${prefix}/users`, () => {
       const emailInvalid = UserBuilder.emailInvalid();
 
       const { body } = await request(server)
-        .post(`${prefix}/users`)
+        .post(`${prefix}/user`)
         .send(emailInvalid);
 
       const errorEmail = () => body.find(error => error.field === 'email');
@@ -62,11 +62,11 @@ describe(`${prefix}/users`, () => {
       const newUser = UserBuilder.randomUserInfo();
 
       await request(server)
-        .post(`${prefix}/users`)
+        .post(`${prefix}/user`)
         .send(newUser);
 
       const { status, body } = await request(server)
-        .post(`${prefix}/users`)
+        .post(`${prefix}/user`)
         .send(newUser);
 
       const errorEmail = () => body.find(error => error.field === 'email');
@@ -79,7 +79,7 @@ describe(`${prefix}/users`, () => {
       const passwordInvalid = UserBuilder.passwordInvalid();
 
       const { body } = await request(server)
-        .post(`${prefix}/users`)
+        .post(`${prefix}/user`)
         .send(passwordInvalid);
 
       const errorPassword = () =>
@@ -93,7 +93,7 @@ describe(`${prefix}/users`, () => {
       const newUser = UserBuilder.randomUserInfo();
 
       const { status, body } = await request(server)
-        .post(`${prefix}/users`)
+        .post(`${prefix}/user`)
         .send(newUser);
 
       expect(status).to.equal(201);
