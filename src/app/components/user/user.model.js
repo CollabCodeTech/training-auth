@@ -20,6 +20,12 @@ const UserSchema = new Schema({
     required: true,
     minlength: 8,
     select: false
+  },
+  emailConfirmed: {
+    type: Boolean,
+    required: true,
+    default: false,
+    select: false
   }
 });
 
