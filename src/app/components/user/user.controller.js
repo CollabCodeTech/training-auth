@@ -5,13 +5,11 @@ import { sendUserConfirmationEmail } from '../../../lib/apis.lib';
 
 const save = async ({ body }, res) => {
   try {
-    const user = await User.create(body);
+    const { email } = await User.create(body);
 
-    user.password = undefined;
+    await sendUserConfirmationEmail(email);
 
-    await sendUserConfirmationEmail(body.email);
-
-    return res.send(201, user);
+    return res.send(201, email);
   } catch (error) {
     return res.send(new InternalServerError({ cause: error }));
   }

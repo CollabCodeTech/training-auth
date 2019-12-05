@@ -97,10 +97,7 @@ describe(`${prefix}/users`, () => {
         .send(newUser);
 
       expect(status).to.equal(201);
-      expect(body).to.have.property('_id');
-      expect(body).to.have.property('name', newUser.name);
       expect(body).to.have.property('email', newUser.email.toLowerCase());
-      expect(body).to.not.have.property('password');
     });
   });
 });
