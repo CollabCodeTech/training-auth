@@ -1,25 +1,27 @@
 import request from 'supertest';
 import { expect } from 'chai';
+import moment from 'moment';
 
+import jwt from '../../../../src/lib/jwt.lib';
 import User from '../../../../src/app/components/user/user.model';
 import server from '../../../../src/app/server';
-import { UserBuilder } from '../../../data-builders';
+import { UserBuilder, TokenBuilder } from '../../../data-builders';
 
-const prefix = '/api';
+const prefix = '/api/user';
 
-describe(`${prefix}/user`, () => {
+describe(`${prefix}`, () => {
   before(() => User.deleteMany());
   after(() => User.deleteMany());
 
   describe('POST /', () => {
     it("should return 400 when the body doesn't have name, email and password", async () => {
-      const { status } = await request(server).post(`${prefix}/user`);
+      const { status } = await request(server).post(`${prefix}`);
 
       expect(status).to.equals(400);
     });
 
     it("should return an array with keys field and error when the body doesn't have name, email and password", async () => {
-      const { body } = await request(server).post(`${prefix}/user`);
+      const { body } = await request(server).post(`${prefix}`);
 
       expect(body).to.be.an('array');
       expect(body.length).to.equal(3);
@@ -36,7 +38,7 @@ describe(`${prefix}/user`, () => {
       const nameInvalid = UserBuilder.nameInvalid();
 
       const { body } = await request(server)
-        .post(`${prefix}/user`)
+        .post(`${prefix}`)
         .send({ ...newUser, ...nameInvalid });
 
       const errorName = () => body.find(error => error.field === 'name');
@@ -49,7 +51,7 @@ describe(`${prefix}/user`, () => {
       const emailInvalid = UserBuilder.emailInvalid();
 
       const { body } = await request(server)
-        .post(`${prefix}/user`)
+        .post(`${prefix}`)
         .send(emailInvalid);
 
       const errorEmail = () => body.find(error => error.field === 'email');
@@ -62,11 +64,11 @@ describe(`${prefix}/user`, () => {
       const newUser = UserBuilder.randomUserInfo();
 
       await request(server)
-        .post(`${prefix}/user`)
+        .post(`${prefix}`)
         .send(newUser);
 
       const { status, body } = await request(server)
-        .post(`${prefix}/user`)
+        .post(`${prefix}`)
         .send(newUser);
 
       const errorEmail = () => body.find(error => error.field === 'email');
@@ -79,7 +81,7 @@ describe(`${prefix}/user`, () => {
       const passwordInvalid = UserBuilder.passwordInvalid();
 
       const { body } = await request(server)
-        .post(`${prefix}/user`)
+        .post(`${prefix}`)
         .send(passwordInvalid);
 
       const errorPassword = () =>
@@ -93,11 +95,59 @@ describe(`${prefix}/user`, () => {
       const newUser = UserBuilder.randomUserInfo();
 
       const { status, body } = await request(server)
-        .post(`${prefix}/user`)
+        .post(`${prefix}`)
         .send(newUser);
 
       expect(status).to.equal(201);
       expect(body).to.have.property('email', newUser.email.toLowerCase());
+    });
+  });
+
+  describe('POST /confirmation', () => {
+    it(`should return status 400 when the body does't have token`, async () => {
+      const { status } = await request(server).post(`${prefix}/confirmation`);
+
+      expect(status).to.equal(400);
+    });
+
+    it('should return status 401 when send invalided token', async () => {
+      const invalidToken = TokenBuilder.generateRandom();
+      const { status } = await request(server)
+        .post(`${prefix}/confirmation`)
+        .send({ token: invalidToken });
+
+      expect(status).to.equal(401);
+    });
+
+    it('should return status 401 when send expired token', async () => {
+      const newUser = UserBuilder.randomUserInfo();
+      const iat = moment
+        .utc()
+        .subtract(20, 'days')
+        .unix();
+      const token = jwt.encode(
+        { name: newUser.name, iat },
+        { expiresIn: '1day' }
+      );
+      const { status } = await request(server)
+        .post(`${prefix}/confirmation`)
+        .send({ token });
+
+      expect(status).to.equal(401);
+    });
+
+    it('should return status 200 and email in body when send a valid token in body', async () => {
+      const newUser = UserBuilder.randomUserInfo();
+      const { body: email } = await request(server)
+        .post(`${prefix}`)
+        .send(newUser);
+      const token = jwt.encode(email, { expiresIn: '1h' });
+      const { status, body } = await request(server)
+        .post(`${prefix}/confirmation`)
+        .send({ token });
+
+      expect(status).to.equal(200);
+      expect(body).to.have.property('email');
     });
   });
 });

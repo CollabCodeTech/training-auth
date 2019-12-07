@@ -30,7 +30,7 @@ const schema = yup.object().shape({
 
 const userAlreadyExists = user => !!user.length;
 
-const hasBody = ({ body }, res, next) => {
+const hasBodyToSave = ({ body }, res, next) => {
   schema
     .validate(body, { abortEarly: false })
     .then(async () => {
@@ -56,5 +56,18 @@ const hasBody = ({ body }, res, next) => {
     });
 };
 
-// eslint-disable-next-line import/prefer-default-export
-export { hasBody };
+const hasBodyToConfirmation = ({ body }, res, next) => {
+  if (!body) {
+    return res.send(
+      new BadRequestError({
+        toJSON: () => ({
+          error: 'Não foi enviado um token no body'
+        })
+      })
+    );
+  }
+
+  return next();
+};
+
+export { hasBodyToSave, hasBodyToConfirmation };
