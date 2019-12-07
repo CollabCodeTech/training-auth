@@ -4,12 +4,14 @@ import User from '../user/user.model';
 
 const hasBody = (req, res, next) => {
   if (!req.body) {
-    return res.send(new BadRequestError({
-      toJSON: () => ({
-        field: 'email',
-        error: 'Email e senha não informados',
-      }),
-    }));
+    return res.send(
+      new BadRequestError({
+        toJSON: () => ({
+          field: 'email',
+          error: 'Email e senha não informados'
+        })
+      })
+    );
   }
 
   return next();
@@ -21,7 +23,9 @@ const loadUser = async (req, res, next) => {
 
   if (!user) {
     return res.send(
-      new UnauthorizedError({ toJSON: () => ({ field: 'email', error: 'Email não cadastrado' }) }),
+      new UnauthorizedError({
+        toJSON: () => ({ field: 'email', error: 'Email não cadastrado' })
+      })
     );
   }
 

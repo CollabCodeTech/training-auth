@@ -1,8 +1,8 @@
 {
-  "editor.formatOnSave": true,
   "files.associations": {
     ".huskyrc": "json",
     ".lintstagedrc": "json"
   },
+  "editor.formatOnSave": true,
   "eslint.autoFixOnSave": true
 }
