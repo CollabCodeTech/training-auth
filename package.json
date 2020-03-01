@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "nodemon src/index.js",
     "build": "sucrase ./src -d ./dist --transforms imports",
-    "test": "NODE_ENV=test ./node_modules/.bin/nyc ./node_modules/.bin/_mocha"
+    "allTest": "NODE_ENV=test ./node_modules/.bin/nyc ./node_modules/.bin/_mocha",
+    "test": "docker-compose run auth npm run allTest"
   },
   "repository": {
     "type": "git",
