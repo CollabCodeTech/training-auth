@@ -2,6 +2,8 @@ version: '3.7'
 services:
   auth:
     build: .
+    volumes:
+      - .:/app
     ports:
       - '3001:${PORT}'
     environment:
