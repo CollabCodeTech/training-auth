@@ -2,7 +2,6 @@ version: '3.7'
 services:
   mongo:
     image: mongo
-    restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: root
@@ -11,8 +10,6 @@ services:
 
   email:
     image: collabcode/training-email
-    ports:
-      - '3002:3002'
 
   auth:
     build: .
