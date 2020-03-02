@@ -17,8 +17,8 @@ database();
 const { CORS } = process.env;
 
 const cors = corsMiddleware({
-  origins: [CORS],
-  credentials: true,
+  origins: ['*'],
+  credentials: true
 });
 
 server.pre(cors.preflight);
@@ -29,8 +29,8 @@ server.use(
   morgan('combined', {
     stream: winston.stream.write,
     // Skip request logging when running the tests
-    skip: () => process.env.NODE_ENV === 'test',
-  }),
+    skip: () => process.env.NODE_ENV === 'test'
+  })
 );
 server.use(restify.plugins.bodyParser());
 
