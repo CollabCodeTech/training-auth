@@ -1,5 +1,19 @@
 version: '3.7'
 services:
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    ports:
+      - '27017:27017'
+
+  email:
+    image: collabcode/training-email
+    ports:
+      - '3002:3002'
+
   auth:
     build: .
     volumes:
@@ -8,12 +22,6 @@ services:
       - '3001:${PORT}'
     environment:
       - NODE_ENV
-
-  mongo:
-    image: mongo
-    restart: always
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: root
-    ports:
-      - 27017:27017
+    depends_on:
+      - mongo
+      - email
