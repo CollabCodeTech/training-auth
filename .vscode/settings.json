@@ -1,10 +1,6 @@
 {
-  "files.associations": {
-    ".huskyrc": "json",
-    ".lintstagedrc": "json"
-  },
+  "editor.tabSize": 2,
   "editor.formatOnSave": true,
-  "eslint.autoFixOnSave": true,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   }
