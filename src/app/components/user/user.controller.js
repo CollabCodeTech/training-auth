@@ -4,12 +4,22 @@ import User from './user.model';
 import jwt from '../../../lib/jwt.lib';
 import { sendUserConfirmationEmail } from '../../../lib/apis.lib';
 
+import Jwt from '../../../lib/jwt.lib';
+
+const setCookieJwt = (res, jwt) => {
+  const { COOKIE_OPTIONS } = process.env;
+
+  res.header('Set-Cookie', `jwt=${jwt}; ${COOKIE_OPTIONS}`);
+};
+
 const save = async ({ body }, res) => {
   try {
     const { email } = await User.create(body);
 
     const token = jwt.encode({ email }, { expiresIn: '1h' });
     await sendUserConfirmationEmail(email, token);
+
+    setCookieJwt(res, jwt);
 
     return res.send(201, { email });
   } catch (error) {

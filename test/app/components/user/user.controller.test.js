@@ -149,5 +149,18 @@ describe(`${prefix}`, () => {
       expect(status).to.equal(200);
       expect(body).to.have.property('email');
     });
+
+    it('should return set-cookie and JWT', async () => {
+      const newUser = UserBuilder.randomUserInfo();
+      const { headers } = await request(server)
+        .post(`${prefix}`)
+        .send(newUser);
+
+      const cookies = headers['set-cookie'][0];
+
+      expect(headers).to.have.property('set-cookie');
+      expect(cookies).to.be.a('string');
+      expect(cookies).to.match(/jwt=/);
+    });
   });
 });
