@@ -4,8 +4,6 @@ import User from './user.model';
 import jwt from '../../../lib/jwt.lib';
 import { sendUserConfirmationEmail } from '../../../lib/apis.lib';
 
-import Jwt from '../../../lib/jwt.lib';
-
 const setCookieJwt = (res, jwt) => {
   const { COOKIE_OPTIONS } = process.env;
 
