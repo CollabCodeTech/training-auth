@@ -17,7 +17,8 @@ database();
 const { CORS } = process.env;
 
 const cors = corsMiddleware({
-  origins: [CORS]
+  origins: [CORS],
+  credentials: true
 });
 
 server.pre(cors.preflight);
