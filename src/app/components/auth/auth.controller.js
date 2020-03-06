@@ -22,9 +22,9 @@ const login = async ({ body: { password } }, res) => {
       );
     }
 
-    const jwt = Jwt.encode({ name: user.name }, { expiresIn: '1day' });
+    const token = Jwt.encode({ name: user.name }, { expiresIn: '1day' });
 
-    setCookieJwt(res, jwt);
+    setCookieJwt(res, token);
 
     return res.send(200, {
       message: 'Login efetuado com sucesso!',
@@ -38,9 +38,9 @@ const login = async ({ body: { password } }, res) => {
 const refreshToken = ({ headers: { cookie } }, res) => {
   try {
     const jwt = cookie.match(/jwt=([^;]+)/)[1];
-    const newJwt = Jwt.refresh(jwt);
+    const newToken = Jwt.refresh(jwt);
 
-    setCookieJwt(res, newJwt);
+    setCookieJwt(res, newToken);
 
     return res.send(200, {
       msg: 'Token atualizado com sucesso'
