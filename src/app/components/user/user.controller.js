@@ -17,7 +17,7 @@ const save = async ({ body }, res) => {
     const token = jwt.encode({ email }, { expiresIn: '1h' });
     await sendUserConfirmationEmail(email, token);
 
-    setCookieJwt(res, jwt);
+    setCookieJwt(res, token);
 
     return res.send(201, { email });
   } catch (error) {
