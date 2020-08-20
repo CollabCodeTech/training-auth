@@ -21,7 +21,7 @@
   "homepage": "https://github.com/CollabCodeTech/collabcodetraining-api-auth#readme",
   "dependencies": {
     "app-root-path": "^2.2.1",
-    "bcrypt": "^3.0.8",
+    "bcrypt": "^5.0.0",
     "dotenv": "^8.2.0",
     "helmet": "^3.21.3",
     "jsonwebtoken": "^8.5.1",
